@@ -1,5 +1,5 @@
 {
-  "name": "form-engine",
+  "name": "v-form-engine",
   "version": "1.0.0",
   "description": "一个基于 vue + element-ui 的 PC 端表单引擎。支持灵活的配置项、编辑/查看两种视图、自定义模板/插槽、溢出隐藏、双击复制等...",
   "main": "src/index.js",
