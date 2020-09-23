@@ -1,0 +1,51 @@
+{
+  "name": "date-week-range",
+  "version": "1.0.0",
+  "description": "date-week-range",
+  "main": "src/index.js",
+  "typings": "types/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "dist",
+    "src",
+    "packages",
+    "types"
+  ],
+  "peerDependencies": {
+    "vue": ">= 2.6.0 < 3",
+    "element-ui": "<= 2.13.2"
+  },
+  "dependencies": {
+    "element-ui": "2.13.2",
+    "vue": "^2.6.12"
+  },
+  "devDependencies": {
+    "vue-template-compiler": "^2.6.11"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaofan9/date-week-range.git"
+  },
+  "author": "sifan",
+  "keywords": [
+    "Vue",
+    "component",
+    "element-ui",
+    "date-picker",
+    "date-week",
+    "date-week-range"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xiaofan9/date-week-range/issues"
+  },
+  "homepage": "https://github.com/xiaofan9/date-week-range#readme",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "unpkg": "lib/index.js"
+}
