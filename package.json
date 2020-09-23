@@ -2,17 +2,51 @@
   "name": "v-form-engine",
   "version": "1.0.0",
   "description": "一个基于 vue + element-ui 的 PC 端表单引擎。支持灵活的配置项、编辑/查看两种视图、自定义模板/插槽、溢出隐藏、双击复制等...",
-  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "peerDependencies": {
     "vue": ">= 2.6.0 < 3"
   },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "element-ui": "^2.13.2",
+    "vue": "^2.6.11",
+    "vue-property-decorator": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/webpack-env": "^1.15.3",
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-typescript": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/eslint-config-airbnb": "^5.1.0",
+    "@vue/eslint-config-typescript": "^5.1.0",
+    "babel-plugin-component": "^1.1.1",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "typescript": "~3.9.3",
+    "vue-class-component": "^7.2.6",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended",
+      "@vue/typescript/recommended"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2020
+    },
+    "rules": {}
   },
   "repository": {
     "type": "git",
@@ -23,13 +57,5 @@
   "bugs": {
     "url": "https://github.com/xiaofan9/form-engine/issues"
   },
-  "homepage": "https://github.com/xiaofan9/form-engine#readme",
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
-  ],
-  "dependencies": {
-    "element-ui": "^2.13.2",
-    "vue": "^2.6.12"
-  }
+  "homepage": "https://github.com/xiaofan9/form-engine#readme"
 }
