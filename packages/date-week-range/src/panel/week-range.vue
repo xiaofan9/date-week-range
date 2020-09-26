@@ -122,8 +122,6 @@ import {
 import Clickoutside from 'element-ui/src/utils/clickoutside';
 import Locale from 'element-ui/src/mixins/locale';
 import DateTable from '../basic/date-table';
-import ElInput from 'element-ui/packages/input';
-import ElButton from 'element-ui/packages/button';
 
 const calcDefaultValue = (defaultValue) => {
   if (Array.isArray(defaultValue)) {
@@ -248,7 +246,7 @@ export default {
       visible: '',
       disabledDate: '',
       cellClassName: '',
-      firstDayOfWeek: 7,
+      firstDayOfWeek: 5,
       minTimePickerVisible: false,
       maxTimePickerVisible: false,
       format: '',
@@ -322,6 +320,9 @@ export default {
       } else if (Array.isArray(newVal)) {
         this.minDate = isDate(newVal[0]) ? new Date(newVal[0]) : null;
         this.maxDate = isDate(newVal[1]) ? new Date(newVal[1]) : null;
+
+    console.log('handleRangePick', this.minDate, this.maxDate);
+
         if (this.minDate) {
           this.leftDate = this.minDate;
           if (this.unlinkPanels && this.maxDate) {
@@ -452,7 +453,7 @@ export default {
       const defaultTime = this.defaultTime || [];
       const minDate = modifyWithTimeString(val.minDate, defaultTime[0]);
       const maxDate = modifyWithTimeString(val.maxDate, defaultTime[1]);
-
+    console.log('handleRangePick');
       if (this.maxDate === maxDate && this.minDate === minDate) {
         return;
       }
@@ -481,6 +482,9 @@ export default {
         this.minDate = modifyTime(this.minDate, value.getHours(), value.getMinutes(), value.getSeconds());
       }
 
+    console.log('handleRangePick');
+
+
       if (!first) {
         this.minTimePickerVisible = visible;
       }
@@ -505,6 +509,9 @@ export default {
 
       if (this.maxDate && this.minDate && this.minDate.getTime() > this.maxDate.getTime()) {
         this.minDate = new Date(this.maxDate);
+
+    console.log('handleRangePick');
+
       }
     },
 
@@ -589,6 +596,6 @@ export default {
     }
   },
 
-  components: { DateTable, ElInput, ElButton }
+  components: { DateTable }
 };
 </script>

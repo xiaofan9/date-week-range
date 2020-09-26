@@ -194,7 +194,7 @@ export default {
             }
           }
 
-          let cellDate = new Date(time);
+          const cellDate = new Date(time);
           cell.disabled = typeof disabledDate === 'function' && disabledDate(cellDate);
           cell.selected = arrayFind(selectedDate, date => date.getTime() === cellDate.getTime());
           cell.customClass = typeof cellClassName === 'function' && cellClassName(cellDate);
@@ -255,7 +255,7 @@ export default {
       const selectionMode = this.selectionMode;
       const defaultValue = this.defaultValue ? Array.isArray(this.defaultValue) ? this.defaultValue : [this.defaultValue] : [];
 
-      let classes = [];
+      const classes = [];
       if ((cell.type === 'normal' || cell.type === 'today') && !cell.disabled) {
         classes.push('available');
         if (cell.type === 'today') {

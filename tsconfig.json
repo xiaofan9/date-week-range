@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
+    "target": "esnext",
+    "module": "esnext",
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
+    "experimentalDecorators": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
@@ -21,7 +21,7 @@
       ]
     },
     "lib": [
-      "ESNext",
+      "esnext",
       "dom",
       "dom.iterable",
       "scripthost"

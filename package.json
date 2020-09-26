@@ -34,21 +34,6 @@
     "vue-class-component": "^7.2.6",
     "vue-template-compiler": "^2.6.11"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended",
-      "@vue/typescript/recommended"
-    ],
-    "parserOptions": {
-      "ecmaVersion": 2020
-    },
-    "rules": {}
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xiaofan9/date-week-range.git"

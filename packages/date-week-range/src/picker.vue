@@ -1,8 +1,8 @@
 <template>
   <el-input
     class="el-date-editor"
-    :class="'el-date-editor--' + type"
-    :readonly="!editable || readonly || type === 'dates' || type === 'week'"
+    :class="'el-date-editor--' + (type || '')"
+    :readonly="!editable || readonly"
     :disabled="pickerDisabled"
     :size="pickerSize"
     :name="name"
@@ -86,7 +86,7 @@
 <script>
 import Vue from 'vue';
 import Clickoutside from 'element-ui/src/utils/clickoutside';
-import { formatDate, parseDate, isDateObject, getWeekNumber } from 'element-ui/src/utils/date-util';
+import { formatDate, isDateObject, getWeekNumber } from 'element-ui/src/utils/date-util';
 import Popper from 'element-ui/src/utils/vue-popper';
 import Emitter from 'element-ui/src/mixins/emitter';
 import ElInput from 'element-ui/packages/input';
@@ -101,70 +101,18 @@ const NewPopper = {
   },
   methods: Popper.methods,
   data() {
-    return merge({ visibleArrow: true }, Popper.data);
+    return merge({ visibleArrow: true, type: 'weekrange' }, Popper.data);
   },
   beforeDestroy: Popper.beforeDestroy
 };
 
 const DEFAULT_FORMATS = {
-  date: 'yyyy-MM-dd',
-  month: 'yyyy-MM',
-  datetime: 'yyyy-MM-dd HH:mm:ss',
-  time: 'HH:mm:ss',
-  week: 'yyyywWW',
-  timerange: 'HH:mm:ss',
-  daterange: 'yyyy-MM-dd',
-  weekrange: 'yyyy-MM',
-  monthrange: 'yyyy-MM',
-  datetimerange: 'yyyy-MM-dd HH:mm:ss',
-  year: 'yyyy'
+  weekrange: 'yyyy-WW',
 };
 const HAVE_TRIGGER_TYPES = [
-  'date',
-  'datetime',
-  'time',
-  'time-select',
-  'week',
-  'month',
-  'year',
-  'daterange',
   'weekrange',
-  'monthrange',
-  'timerange',
-  'datetimerange',
-  'dates'
 ];
-const DATE_FORMATTER = function(value, format) {
-  if (format === 'timestamp') return value.getTime();
-  return formatDate(value, format);
-};
-const DATE_PARSER = function(text, format) {
-  if (format === 'timestamp') return new Date(Number(text));
-  return parseDate(text, format);
-};
-const RANGE_FORMATTER = function(value, format) {
-  if (Array.isArray(value) && value.length === 2) {
-    const start = value[0];
-    const end = value[1];
 
-    if (start && end) {
-      return [DATE_FORMATTER(start, format), DATE_FORMATTER(end, format)];
-    }
-  }
-  return '';
-};
-const RANGE_PARSER = function(array, format, separator) {
-  if (!Array.isArray(array)) {
-    array = array.split(separator);
-  }
-  if (array.length === 2) {
-    const range1 = array[0];
-    const range2 = array[1];
-
-    return [DATE_PARSER(range1, format), DATE_PARSER(range2, format)];
-  }
-  return [];
-};
 const TYPE_VALUE_RESOLVER_MAP = {
   default: {
     formatter(value) {
@@ -176,63 +124,15 @@ const TYPE_VALUE_RESOLVER_MAP = {
       return text;
     }
   },
-  week: {
-    formatter(value, format) {
-      let week = getWeekNumber(value);
-      let month = value.getMonth();
-      const trueDate = new Date(value);
-      if (week === 1 && month === 11) {
-        trueDate.setHours(0, 0, 0, 0);
-        trueDate.setDate(trueDate.getDate() + 3 - (trueDate.getDay() + 6) % 7);
-      }
-      let date = formatDate(trueDate, format);
-
-      date = /WW/.test(date)
-        ? date.replace(/WW/, week < 10 ? '0' + week : week)
-        : date.replace(/W/, week);
-      return date;
-    },
-    parser(text, format) {
-      // parse as if a normal date
-      return TYPE_VALUE_RESOLVER_MAP.date.parser(text, format);
-    }
-  },
-  date: {
-    formatter: DATE_FORMATTER,
-    parser: DATE_PARSER
-  },
-  datetime: {
-    formatter: DATE_FORMATTER,
-    parser: DATE_PARSER
-  },
-  daterange: {
-    formatter: RANGE_FORMATTER,
-    parser: RANGE_PARSER
-  },
   weekrange: {
     formatter(value, format) {
-      if(!Array.isArray(value)){
-        return getDate(value);
-      }
-
-      let isFirst = true;
-
-      const dateList = []
-      for(let val of value) {
-        dateList.push(getDate(val, isFirst));
-
-        if(isFirst) {
-          isFirst = false;
-        }
-      }
-
       function getDate(value, isChange) {
         if(isChange) {
           value = new Date(+new Date(value) + 1000 * 60 * 60 * 24);
         }
 
-        let week = getWeekNumber(value);
-        let month = value.getMonth();
+        const week = getWeekNumber(value);
+        const month = value.getMonth();
         const trueDate = new Date(value);
         if (week === 1 && month === 11) {
           trueDate.setHours(0, 0, 0, 0);
@@ -246,6 +146,21 @@ const TYPE_VALUE_RESOLVER_MAP = {
         return date;
       }
 
+      if(!Array.isArray(value)){
+        return getDate(value);
+      }
+
+      let isFirst = true;
+
+      const dateList = []
+      for(const val of value) {
+        dateList.push(getDate(val, isFirst));
+
+        if(isFirst) {
+          isFirst = false;
+        }
+      }
+      
       return dateList;
     },
     parser(text, format) {
@@ -253,54 +168,6 @@ const TYPE_VALUE_RESOLVER_MAP = {
       return TYPE_VALUE_RESOLVER_MAP.date.parser(text, format);
     }
   },
-  monthrange: {
-    formatter: RANGE_FORMATTER,
-    parser: RANGE_PARSER
-  },
-  datetimerange: {
-    formatter: RANGE_FORMATTER,
-    parser: RANGE_PARSER
-  },
-  timerange: {
-    formatter: RANGE_FORMATTER,
-    parser: RANGE_PARSER
-  },
-  time: {
-    formatter: DATE_FORMATTER,
-    parser: DATE_PARSER
-  },
-  month: {
-    formatter: DATE_FORMATTER,
-    parser: DATE_PARSER
-  },
-  year: {
-    formatter: DATE_FORMATTER,
-    parser: DATE_PARSER
-  },
-  number: {
-    formatter(value) {
-      if (!value) return '';
-      return '' + value;
-    },
-    parser(text) {
-      let result = Number(text);
-
-      if (!isNaN(text)) {
-        return result;
-      } else {
-        return null;
-      }
-    }
-  },
-  dates: {
-    formatter(value, format) {
-      return value.map(date => DATE_FORMATTER(date, format));
-    },
-    parser(value, format) {
-      return (typeof value === 'string' ? value.split(', ') : value)
-        .map(date => date instanceof Date ? date : DATE_PARSER(date, format));
-    }
-  }
 };
 const PLACEMENT_MAP = {
   left: 'bottom-start',
@@ -318,7 +185,7 @@ const parseAsFormatAndType = (value, customFormat, type, rangeSeparator = '-') =
   return parser(value, format, rangeSeparator);
 };
 
-const formatAsFormatAndType = (value, customFormat, type) => {
+const formatAsFormatAndType = (value, customFormat, type = 'weekrange') => {
   if (!value) return null;
   const formatter = (
     TYPE_VALUE_RESOLVER_MAP[type] ||
@@ -453,6 +320,7 @@ export default {
 
   watch: {
     pickerVisible(val) {
+      console.log(val);
       if (this.readonly || this.pickerDisabled) return;
       if (val) {
         this.showPicker();
@@ -523,21 +391,11 @@ export default {
     },
 
     triggerClass() {
-      return this.prefixIcon || (this.type.indexOf('time') !== -1 ? 'el-icon-time' : 'el-icon-date');
+      return this.prefixIcon || 'el-icon-date';
     },
 
     selectionMode() {
-      if (this.type === 'week') {
-        return 'week';
-      } else if (this.type === 'month') {
-        return 'month';
-      } else if (this.type === 'year') {
-        return 'year';
-      } else if (this.type === 'dates') {
-        return 'dates';
-      }
-
-      return 'day';
+      return 'week';
     },
 
     haveTrigger() {
@@ -557,9 +415,7 @@ export default {
       } else if (this.userInput !== null) {
         return this.userInput;
       } else if (formattedValue) {
-        return this.type === 'dates'
-          ? formattedValue.join(', ')
-          : formattedValue;
+        return formattedValue;
       } else {
         return '';
       }
@@ -567,7 +423,6 @@ export default {
 
     parsedValue() {
       if (!this.value) return this.value; // component value is not set
-      if (this.type === 'time-select') return this.value; // time-select does not require parsing, this might change in next major version
 
       const valueIsDateObject = isDateObject(this.value) || (Array.isArray(this.value) && this.value.every(isDateObject));
       if (valueIsDateObject) {
@@ -758,12 +613,6 @@ export default {
     handleClose() {
       if (!this.pickerVisible) return;
       this.pickerVisible = false;
-
-      if (this.type === 'dates') {
-        // restore to former value
-        const oldValue = parseAsFormatAndType(this.valueOnOpen, this.valueFormat, this.type, this.rangeSeparator) || this.valueOnOpen;
-        this.emitInput(oldValue);
-      }
     },
 
     handleFieldReset(initialValue) {
@@ -873,7 +722,7 @@ export default {
       this.picker.popperClass = this.popperClass;
       this.popperElm = this.picker.$el;
       this.picker.width = this.reference.getBoundingClientRect().width;
-      this.picker.showTime = this.type === 'datetime' || this.type === 'datetimerange';
+      this.picker.showTime = false;
       this.picker.selectionMode = this.selectionMode;
       this.picker.unlinkPanels = this.unlinkPanels;
       this.picker.arrowControl = this.arrowControl || this.timeArrowControl || false;
@@ -894,7 +743,7 @@ export default {
         }
 
         for (const option in options) {
-          if (options.hasOwnProperty(option) &&
+          if (Object.hasOwnProperty.call(options, option) &&
               // 忽略 time-picker 的该配置项
               option !== 'selectableRange') {
             this.picker[option] = options[option];

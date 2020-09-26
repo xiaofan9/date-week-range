@@ -10,13 +10,13 @@ export interface DisabledDateChecker {
    * @param date The date to check
    * @returns if `date` will be disabled in the picker
    */
-  (date: Date): boolean
+  (date: Date): boolean;
 }
 
 // Picked date range
 export interface DateRange {
-  minDate: Date
-  maxDate: Date
+  minDate: Date;
+  maxDate: Date;
 }
 
 export interface PickEventHandler {
@@ -25,7 +25,7 @@ export interface PickEventHandler {
    *
    * @param dateRange The selected date range
    */
-  (dateRange: DateRange): void
+  (dateRange: DateRange): void;
 }
 
 export interface ShortcutClickEventHandler {
@@ -34,32 +34,32 @@ export interface ShortcutClickEventHandler {
    * You can change the picker value by emitting the pick event.
    * Example: `vm.$emit('pick', new Date())`
    */
-  (vm: ElDatePicker): void
+  (vm: ElDatePicker): void;
 }
 
 /** Shortcut options */
 export interface Shortcut {
   /** Title of the shortcut */
-  text: string
+  text: string;
 
   /** Callback function that triggers when picks a date range */
-  onClick?: ShortcutClickEventHandler
+  onClick?: ShortcutClickEventHandler;
 }
 
 /** Options of el-date-picker */
 export interface DatePickerOptions {
   /** An object array to set shortcut options */
-  shortcuts?: Shortcut[]
+  shortcuts?: Shortcut[];
 
   /** A function determining if a date is disabled. */
-  disabledDate?: DisabledDateChecker
+  disabledDate?: DisabledDateChecker;
 
   /** First day of week */
-  firstDayOfWeek?: FirstDayOfWeek
+  firstDayOfWeek?: FirstDayOfWeek;
 
   /** A callback that triggers when the seleted date is changed. Only for
    * daterange and datetimerange. */
-  onPick?: PickEventHandler
+  onPick?: PickEventHandler;
 }
 
 /** DatePicker Component */
@@ -123,3 +123,5 @@ export declare class ElDatePicker extends ElementUIComponent {
    */
   focus (): void
 }
+
+export default class DatePicker extends ElDatePicker {}

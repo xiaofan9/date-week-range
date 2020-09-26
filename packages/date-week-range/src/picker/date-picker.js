@@ -1,25 +1,16 @@
 import Picker from '../picker';
-import MonthRangePanel from '../panel/month-range';
 import WeekRangePanel from '../panel/week-range';
 
-const getPanel = function(type) {
-  if (type === 'monthrange') {
-    return MonthRangePanel;
-  } else if (type === 'weekrange') {
-    return WeekRangePanel;
-  }
+const getPanel = function() {
+  return WeekRangePanel;
 };
 
 export default {
   mixins: [Picker],
 
-  name: 'ElDatePicker1',
+  name: 'DateWeekRange',
 
   props: {
-    type: {
-      type: String,
-      default: 'date'
-    },
     timeArrowControl: Boolean
   },
 
