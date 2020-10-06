@@ -320,7 +320,6 @@ export default {
 
   watch: {
     pickerVisible(val) {
-      console.log(val);
       if (this.readonly || this.pickerDisabled) return;
       if (val) {
         this.showPicker();
@@ -823,3 +822,7 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+@import '~element-ui/packages/theme-chalk/src/date-picker.scss';
+</style>
