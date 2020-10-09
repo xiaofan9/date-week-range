@@ -2,7 +2,8 @@
   "name": "date-week-range",
   "version": "1.0.0",
   "description": "date-week-range",
-  "main": "src/index.js",
+  "main": "dist/date-week-range.js",
+  "module": "dist/date-week-range.js",
   "typings": "types/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,19 +11,16 @@
   "files": [
     "dist",
     "src",
-    "packages",
     "types"
   ],
   "peerDependencies": {
-    "vue": ">= 2.6.0 < 3",
-    "element-ui": "<= 2.13.2"
+    "vue": ">= 2.6.0 < 3"
   },
   "dependencies": {
-    "element-ui": "2.13.2",
     "vue": "^2.6.12"
   },
   "devDependencies": {
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.12"
   },
   "repository": {
     "type": "git",
@@ -32,7 +30,6 @@
   "keywords": [
     "Vue",
     "component",
-    "element-ui",
     "date-picker",
     "date-week",
     "date-week-range"
@@ -47,5 +44,5 @@
     "last 2 versions",
     "not dead"
   ],
-  "unpkg": "lib/index.js"
+  "unpkg": "dist/date-week-range.js"
 }

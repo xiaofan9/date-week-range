@@ -4,16 +4,16 @@
   "description": "date-week-range",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "node ./build/build.js",
     "lint": "vue-cli-service lint"
   },
   "peerDependencies": {
-    "vue": ">= 2.6.0 < 3",
-    "element-ui": "<= 2.13.2"
+    "element-ui": "<= 2.13.2",
+    "vue": ">= 2.6.0 < 3"
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "element-ui": "2.13.2",
+    "element-ui": "^2.13.2",
     "vue": "^2.6.11",
     "vue-property-decorator": "^9.0.0"
   },
@@ -31,10 +31,17 @@
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "node-sass": "^4.14.1",
+    "ora": "^5.1.0",
+    "rimraf": "^3.0.2",
     "sass-loader": "^10.0.2",
     "typescript": "~3.9.3",
     "vue-class-component": "^7.2.6",
-    "vue-template-compiler": "^2.6.11"
+    "vue-loader": "^15.9.3",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12",
+    "webpack-merge": "^5.2.0",
+    "webpack-node-externals": "^2.5.2"
   },
   "repository": {
     "type": "git",

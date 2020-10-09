@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import dateWeekRange from '../packages/date-week-range'
+import dateWeekRange from 'date-week-range'
 
 Vue.config.productionTip = false
 
