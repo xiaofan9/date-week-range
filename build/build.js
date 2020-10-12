@@ -5,7 +5,7 @@ const rm = require("rimraf");
 const path = require("path");
 const chalk = require("chalk");
 const webpack = require("webpack");
-const webpackConfig = require("./webpack.component.js");
+const webpackConfig = require("./webpack.conf.js");
 const merge = require("webpack-merge");
 
 let isModern = false;

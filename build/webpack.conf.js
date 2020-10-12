@@ -1,37 +1,42 @@
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const Components = require('../components.json');
+const TerserPlugin = require('terser-webpack-plugin');
+
+const components = require('../components.json');
 const config = require('./config');
 
-const webpackConfig = {
+module.exports = {
   mode: 'production',
-  entry: Components,
+  entry: components,
   output: {
     filename: '[name].js',
     chunkFilename: '[id].js',
-    libraryTarget: 'commonjs2',
+    libraryTarget: 'umd',
+    libraryExport: 'default',
+    library: 'DATEWEEKRANGE',
+    umdNamedDefine: true,
+    globalObject: 'typeof self !== \'undefined\' ? self : this',
     ...config.output
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
-    alias: config.alias,
-    modules: ['node_modules']
+    alias: config.alias
   },
   externals: config.externals,
+  optimization: {
+    minimize: false
+  },
   performance: {
     hints: false
   },
-  stats: 'none',
-  optimization: {
-    minimize: false
+  stats: {
+    children: false
   },
   module: {
     rules: [
       {
         test: /\.(jsx?|babel|es6)$/,
-        include: (...params) => {
-          console.log(params);
-        },
+        include: process.cwd(),
         exclude: config.jsexclude,
         loader: 'babel-loader'
       },
@@ -45,22 +50,12 @@ const webpackConfig = {
         }
       },
       {
-        test: /\.css$/,
-        loaders: ['style-loader', 'css-loader']
+        test: /\.scss$/,
+        loaders: ['style-loader', 'css-loader', 'sass-loader']
       },
-      {
-        test: /\.(svg|otf|ttf|woff2?|eot|gif|png|jpe?g)(\?\S*)?$/,
-        loader: 'url-loader',
-        query: {
-          limit: 10000,
-          name: path.posix.join('static', '[name].[hash:7].[ext]')
-        }
-      }
     ]
   },
   plugins: [
     new VueLoaderPlugin()
   ]
 };
-
-module.exports = webpackConfig;
