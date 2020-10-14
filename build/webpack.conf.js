@@ -12,9 +12,6 @@ module.exports = {
     filename: '[name].js',
     chunkFilename: '[id].js',
     libraryTarget: 'umd',
-    libraryExport: 'default',
-    library: 'DATEWEEKRANGE',
-    umdNamedDefine: true,
     globalObject: 'typeof self !== \'undefined\' ? self : this',
     ...config.output
   },
@@ -22,9 +19,14 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: config.alias
   },
-  externals: config.externals,
+  externals: config.vue,
   optimization: {
-    minimize: false
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        extractComments: false,
+      }),
+    ],
   },
   performance: {
     hints: false

@@ -1,5 +1,6 @@
 const path = require('path');
 const { genTranspileDepRegex } = require("./utils");
+const nodeExternals = require('webpack-node-externals');
 
 exports.alias = {
   packages: path.resolve(__dirname, '../packages'),
@@ -11,6 +12,8 @@ exports.vue = {
   commonjs2: 'vue',
   amd: 'vue'
 };
+
+exports.externals = [{ vue: 'vue' }, nodeExternals()];
 
 exports.jsexclude = function (filepath){
   const transpileDependencies = ['element-ui/src', 'element-ui/packages'];

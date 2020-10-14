@@ -2,13 +2,16 @@
   "name": "date-week-range",
   "version": "1.0.0",
   "description": "date-week-range",
+  "main": "dist/date-week-range.js",
+  "module": "dist/date-week-range.js",
+  "typings": "types/index.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "node ./build/build.js",
+    "publish": "npm run build && gulp",
     "lint": "vue-cli-service lint"
   },
   "peerDependencies": {
-    "element-ui": "<= 2.13.2",
     "vue": ">= 2.6.0 < 3"
   },
   "dependencies": {
@@ -26,10 +29,13 @@
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
-    "@vue/eslint-config-airbnb": "^5.1.0",
     "@vue/eslint-config-typescript": "^5.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
+    "gulp-json-editor": "^2.5.4",
+    "merge": "^1.2.1",
     "node-sass": "^4.14.1",
     "ora": "^5.1.0",
     "rimraf": "^3.0.2",
@@ -50,9 +56,22 @@
     "url": "git+https://github.com/xiaofan9/date-week-range.git"
   },
   "author": "sifan",
+  "keywords": [
+    "Vue",
+    "component",
+    "date-picker",
+    "date-week",
+    "date-week-range"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/xiaofan9/date-week-range/issues"
   },
-  "homepage": "https://github.com/xiaofan9/date-week-range#readme"
+  "files": [
+    "dist",
+    "src",
+    "types"
+  ],
+  "homepage": "https://github.com/xiaofan9/date-week-range#readme",
+  "unpkg": "dist/date-week-range.js"
 }

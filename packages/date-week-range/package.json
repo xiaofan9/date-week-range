@@ -8,35 +8,21 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "files": [
-    "dist",
-    "src",
-    "types"
-  ],
   "peerDependencies": {
     "vue": ">= 2.6.0 < 3"
   },
+  "browserslist": ["> 1%", "last 2 versions", "not dead"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xiaofan9/date-week-range.git"
   },
   "author": "sifan",
-  "keywords": [
-    "Vue",
-    "component",
-    "date-picker",
-    "date-week",
-    "date-week-range"
-  ],
+  "keywords": ["Vue", "component", "date-picker", "date-week", "date-week-range"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/xiaofan9/date-week-range/issues"
   },
+  "files": ["dist", "src", "types"],
   "homepage": "https://github.com/xiaofan9/date-week-range#readme",
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ],
   "unpkg": "dist/date-week-range.js"
 }

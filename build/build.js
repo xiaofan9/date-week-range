@@ -7,6 +7,7 @@ const chalk = require("chalk");
 const webpack = require("webpack");
 const webpackConfig = require("./webpack.conf.js");
 const merge = require("webpack-merge");
+const config = require("./config");
 
 let isModern = false;
 let isOnly = false;
@@ -35,7 +36,11 @@ function build(webpackConfig, str) {
 
     webpack(webpackConfig, function (err, stats) {
       spinner.stop();
-      if (err) throw err;
+      if (err) {
+        process.exit(1);
+
+        throw err;
+      }
 
       if (stats.hasErrors()) {
         console.log(stats.toString({
@@ -46,7 +51,7 @@ function build(webpackConfig, str) {
 
         process.exit(1);
       }
-
+      
       resolve();
     });
   });
@@ -54,21 +59,20 @@ function build(webpackConfig, str) {
 
 (async function () {
   rm(
-    path.join('../dist'),
+    config.output.path,
     async err => {
-      if (err) throw err;
+      if (err) {
+        spinner.stop();
+
+        process.exit(1);
+        throw err;
+      }
       let startTime = Date.now();
 
       await build(webpackConfig);
 
       console.log(
         chalk.green("Build complete in " + (Date.now() - startTime) + "ms.\n")
-      );
-
-      console.log(
-        chalk.yellow(
-          "Tip: built files are meant to be served over an HTTP/HTTPS server.\n"
-        )
       );
     }
   );
