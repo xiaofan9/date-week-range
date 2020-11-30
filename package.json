@@ -1,6 +1,6 @@
 {
   "name": "date-week-range",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "date-week-range",
   "main": "dist/date-week-range.js",
   "module": "dist/date-week-range.js",
