@@ -1,4 +1,4 @@
-# date-week-range（周选择器）
+# date-week-range（周范围选择器）
 
 > 基于 element-ui 2.x 开发
 
