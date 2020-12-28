@@ -13,7 +13,6 @@ jobs:
         with:
           node-version: 12
       - run: npm ci
-      - run: npm test
 
   publish-npm:
     needs: build
@@ -27,6 +26,6 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npx gulp
-      - run: cd packages/date-week-range npm publish
+      - run: cd packages/date-week-range && npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
