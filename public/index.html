@@ -1,35 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <title>周范围选择器（date-week-range）</title>
+    <link rel="text/css" href="https://unpkg.com/element-ui/lib/theme-chalk/date-picker.css">
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong>We're sorry but 周范围选择器（date-week-range） doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app">
-      <date-week-range
-        v-model="test"
-        :clearable='false'
-        range-separator="-"
-      ></date-week-range>
     </div>
-    <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
-    <script src="../packages/date-week-range/dist/date-week-range.js"></script>
-
-    <script>
-      new Vue({
-        data() {
-          return {
-            test: [new Date()]
-          }
-        }
-      }).$mount('#app')
-    </script>
     <!-- built files will be auto injected -->
   </body>
 </html>

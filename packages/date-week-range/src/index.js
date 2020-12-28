@@ -1,12 +1,12 @@
 import DatePicker from './picker/date-picker'
-import 'element-ui/packages/theme-chalk/src/date-picker.scss';
+import pkg from '../package.json';
 
 function install(Vue) {
   Vue.component(DatePicker.name, DatePicker)
 }
 
-/* istanbul ignore next */
 DatePicker.install = install
+DatePicker.version = pkg.version
 
 /* istanbul ignore if */
 if (typeof window !== 'undefined' && window.Vue) {
