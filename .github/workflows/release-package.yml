@@ -16,6 +16,6 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: npx gulp
-      - run: cd packages/date-week-range && npm publish
+      - run: npm run publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
