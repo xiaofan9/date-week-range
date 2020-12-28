@@ -1,27 +1,9 @@
 const { src, dest, series } = require('gulp');
-const clean = require('gulp-clean');
-const path = require('path');
-const foldPath = 'packages/date-week-range';
 const jsonEditor = require("gulp-json-editor");
 const { Reflect } = require('core-js');
-const merge = require('merge')
+const merge = require('merge');
 
-function copy (name) {
-  return function copy() {
-    clear(name);
-
-    return src(name)
-      .pipe(dest(foldPath));
-  }
-}
-
-function clear(name) {
-  return src(path.resolve(foldPath, name), {
-    allowEmpty: true
-  }).pipe(clean({
-    force: true
-  }));
-}
+const foldPath = './';
 
 function package() {
   return src("package.json")
@@ -39,4 +21,4 @@ function package() {
     })).pipe(dest(foldPath));
 }
 
-exports.default = series(copy('LICENSE'), copy('README.md'), package)
+exports.default = series(package)

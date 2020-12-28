@@ -11,7 +11,7 @@ const cjs = require('@rollup/plugin-commonjs')
 const pkg = require('../package.json')
 
 const deps = Object.keys(pkg.dependencies)
-const foldPath = path.resolve(__dirname, `../packages/${pkg.name}`)
+const foldPath = path.resolve(__dirname, `..`)
 const input = path.resolve(foldPath, 'src/index.js')
 const outputConfig = {
   'esm': {
