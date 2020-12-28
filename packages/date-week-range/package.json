@@ -3,7 +3,6 @@
   "version": "1.0.3",
   "description": "date-week-range",
   "main": "dist/date-week-range.js",
-  "module": "dist/date-week-range.esm.js",
   "typings": "types/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
