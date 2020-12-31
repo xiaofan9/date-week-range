@@ -16,7 +16,8 @@ function package() {
       const tmpJson = merge(json, existJson);
 
       Reflect.deleteProperty(tmpJson, 'devDependencies');
-
+      Reflect.deleteProperty(tmpJson.dependencies, 'core-js');
+      
       return tmpJson;
     })).pipe(dest(foldPath));
 }
