@@ -18,32 +18,27 @@ https://cqe2b.csb.app/
 ### 计划
 
   - ~~1.x 版本，支持 vue2（已完成）~~
-  - 2.x 版本，将进行支持 vue3，计划通过
-  date-week-range@next
-  方式升级使用。
+  - 2.x 版本，将进行支持 vue3，计划通过 date-week-range@next 方式升级使用。
 
 ### 改动
+
   - 移除自动注入css，改用手动引入方式，以减少包的大小，避免出现样式覆盖情况；样式建议直接引入element-ui的[date-picker.css](https://unpkg.com/element-ui/lib/theme-chalk/date-picker.css)，或者引入[dist/date-picker.css](https://unpkg.com/data-week-range/dist/date-picker.css)；如果全局引入了element-ui 样式，则不需额外引入！
   
-  - 新增esm模块，仅支持es6及以上的浏览器。
-
+  - 新增esm模块，仅支持es6及以上的浏览器；建议引入esm模块；该模块也可以通过babel 转义成es5，在低版本浏览器浏览器使用。
+  
   ```javascript
     // 引入方式
     import dateWeekRange from 'date-week-range/dist/date-week-range.esm';
 
-    // 如果要支持es5浏览器，请在vue.config.js文件，进行如下配置：
+    // 转义成es5：
     <!-- vue.config.js -->
     module.exports = {
-      <!-- 省略 -->
+      <!-- 省略代码 -->
       transpileDependencies: ['date-week-range/dist', 'element-ui/packages', 'element-ui/src']
     }
   ```
 
 ### 安装 && 引入
-- 如果不考虑浏览器兼容性，建议引入esm模块：
-```javascript
-import dateWeekRange from 'date-week-range/dist/date-week-range.esm'
-```
 
 > * #### 安装
 
