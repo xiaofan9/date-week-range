@@ -40,6 +40,10 @@ https://cqe2b.csb.app/
   ```
 
 ### 安装 && 引入
+- 如果不考虑浏览器兼容性，建议引入esm模块：
+```javascript
+import dateWeekRange from 'date-week-range/dist/date-week-range.esm'
+```
 
 > * #### 安装
 
