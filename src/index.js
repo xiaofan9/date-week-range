@@ -1,4 +1,4 @@
-import DatePicker from './picker/date-picker'
+import DatePicker from './date-picker'
 import pkg from '../package.json';
 
 function install(Vue) {

@@ -27,11 +27,6 @@
       "scripthost"
     ]
   },
-  "include": [
-    "example/**/*.ts",
-    "example/**/*.tsx",
-    "example/**/*.vue",
-  ],
   "exclude": [
     "node_modules"
   ]

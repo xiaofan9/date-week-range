@@ -1,22 +1,22 @@
 <template>
-  <div id="app">
-    <date-week-range
-      v-model="test"
-      :clearable='false'
-      range-separator="-"
-    ></date-week-range>
-  </div>
+  <date-week-range
+    v-model="test"
+    :clearable='false'
+    range-separator="-"
+    type="daterange"
+  ></date-week-range>
 </template>
 
-<script lang='ts'>
-import { Component, Vue } from 'vue-property-decorator'
+<script>
+import { reactive } from 'vue'
 
-@Component
-export default class App extends Vue {
-  test = [new Date()]
+export default {
+  setup() {
+    const test = reactive([new Date(), new Date()]);
+
+    return {
+      test
+    }
+  },
 }
 </script>
-
-<style lang='scss'>
-
-</style>
