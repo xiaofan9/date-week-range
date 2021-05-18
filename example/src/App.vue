@@ -1,21 +1,27 @@
 <template>
-  <date-week-range
+  <div>
+    <date-week-range
     v-model="test"
     :clearable='false'
     range-separator="-"
     type="daterange"
   ></date-week-range>
+  <el-date-picker
+    v-model="test"
+    type="daterange"
+    start-placeholder="开始日期"
+    end-placeholder="结束日期">
+  </el-date-picker>
+  </div>
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { ref } from 'vue'
 
 export default {
   setup() {
-    const test = reactive([new Date(), new Date()]);
-
     return {
-      test
+      test: ref([])
     }
   },
 }
