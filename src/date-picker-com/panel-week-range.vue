@@ -2,8 +2,7 @@
   <div
     class="el-picker-panel el-date-range-picker"
     :class="[{
-      'has-sidebar': $slots.sidebar || hasShortcuts,
-      'has-time': showTime
+      'has-sidebar': $slots.sidebar || hasShortcuts
     }]"
   >
     <div class="el-picker-panel__body-wrapper">
@@ -20,77 +19,6 @@
         </button>
       </div>
       <div class="el-picker-panel__body">
-        <div v-if="showTime" class="el-date-range-picker__time-header">
-          <span class="el-date-range-picker__editors-wrap">
-            <span class="el-date-range-picker__time-picker-wrap">
-              <el-input
-                size="small"
-                :disabled="rangeState.selecting"
-                :placeholder="t('el.datepicker.startDate')"
-                class="el-date-range-picker__editor"
-                :model-value="minVisibleDate"
-                @input="val => handleDateInput(val, 'min')"
-                @change="val => handleDateChange(val, 'min')"
-              />
-            </span>
-            <span v-clickoutside="handleMinTimeClose" class="el-date-range-picker__time-picker-wrap">
-              <el-input
-                size="small"
-                class="el-date-range-picker__editor"
-                :disabled="rangeState.selecting"
-                :placeholder="t('el.datepicker.startTime')"
-                :model-value="minVisibleTime"
-                @focus="minTimePickerVisible = true"
-                @input="val => handleTimeInput(val, 'min')"
-                @change="val => handleTimeChange(val, 'min')"
-              />
-              <time-pick-panel
-                :visible="minTimePickerVisible"
-                :format="timeFormat"
-                datetime-role="start"
-                :time-arrow-control="arrowControl"
-                :parsed-value="leftDate"
-                @pick="handleMinTimePick"
-              />
-            </span>
-          </span>
-          <span class="el-icon-arrow-right"></span>
-          <span class="el-date-range-picker__editors-wrap is-right">
-            <span class="el-date-range-picker__time-picker-wrap">
-              <el-input
-                size="small"
-                class="el-date-range-picker__editor"
-                :disabled="rangeState.selecting"
-                :placeholder="t('el.datepicker.endDate')"
-                :model-value="maxVisibleDate"
-                :readonly="!minDate"
-                @input="val => handleDateInput(val, 'max')"
-                @change="val => handleDateChange(val, 'max')"
-              />
-            </span>
-            <span v-clickoutside="handleMaxTimeClose" class="el-date-range-picker__time-picker-wrap">
-              <el-input
-                size="small"
-                class="el-date-range-picker__editor"
-                :disabled="rangeState.selecting"
-                :placeholder="t('el.datepicker.endTime')"
-                :model-value="maxVisibleTime"
-                :readonly="!minDate"
-                @focus="minDate && (maxTimePickerVisible = true)"
-                @input="val => handleTimeInput(val, 'max')"
-                @change="val => handleTimeChange(val, 'max')"
-              />
-              <time-pick-panel
-                datetime-role="end"
-                :visible="maxTimePickerVisible"
-                :format="timeFormat"
-                :time-arrow-control="arrowControl"
-                :parsed-value="rightDate"
-                @pick="handleMaxTimePick"
-              />
-            </span>
-          </span>
-        </div>
         <div class="el-picker-panel__content el-date-range-picker__content is-left">
           <div class="el-date-range-picker__header">
             <button
@@ -179,25 +107,6 @@
         </div>
       </div>
     </div>
-    <div v-if="showTime" class="el-picker-panel__footer">
-      <el-button
-        size="mini"
-        type="text"
-        class="el-picker-panel__link-btn"
-        @click="handleClear"
-      >
-        {{ t('el.datepicker.clear') }}
-      </el-button>
-      <el-button
-        plain
-        size="mini"
-        class="el-picker-panel__link-btn"
-        :disabled="btnDisabled"
-        @click="handleConfirm(false)"
-      >
-        {{ t('el.datepicker.confirm') }}
-      </el-button>
-    </div>
   </div>
 </template>
 
@@ -249,6 +158,8 @@ export default defineComponent({
       min: null,
       max: null,
     })
+
+    console.log(leftDate, 'leftDate')
 
     const timeUserInput = ref({
       min: null,
@@ -400,8 +311,6 @@ export default defineComponent({
       }
     }
 
-    const showTime = computed(() => props.type === 'datetime' || props.type === 'datetimerange')
-
     const handleConfirm = (visible = false) => {
       if (isValidValue([minDate.value, maxDate.value])) {
         ctx.emit('pick', [minDate.value, maxDate.value], visible)
@@ -427,7 +336,7 @@ export default defineComponent({
       maxDate.value = maxDate_
       minDate.value = minDate_
 
-      if (!close || showTime.value) return
+      if (!close) return
       handleConfirm()
     }
 
@@ -642,7 +551,6 @@ export default defineComponent({
       rightLabel,
       leftDate,
       rightDate,
-      showTime,
       t,
       minVisibleDate,
       maxVisibleDate,

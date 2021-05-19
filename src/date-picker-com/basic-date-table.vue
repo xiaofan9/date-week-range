@@ -6,6 +6,7 @@
     :class="{ 'is-week-mode': selectionMode === 'week' }"
     @click="handleClick"
     @mousemove="handleMouseMove"
+    @mouseleave="handleMouseOut"
   >
     <tbody>
       <tr>
@@ -132,6 +133,8 @@ export default defineComponent({
       return false
     }
 
+    const moveDate = ref(null);
+
     const rows = computed(() =>  {
       // TODO: refactory rows / getCellClasses
       const startOfMonth = props.date.startOf('month')
@@ -188,7 +191,7 @@ export default defineComponent({
             calTime.isSameOrBefore(props.minDate, 'day')
           ) && (calEndDate &&
             calTime.isSameOrAfter(calEndDate, 'day')
-          )
+          ) || moveDate.value && calTime.isSameOrAfter(moveDate.value, 'week') && calTime.isSameOrBefore(moveDate.value, 'week')
 
           if (props.minDate?.isSameOrAfter(calEndDate)) {
             cell.start = calEndDate && calTime.isSame(calEndDate, 'day')
@@ -239,6 +242,7 @@ export default defineComponent({
           row[end].end = isActive
         }
       }
+
       return rows_
     })
 
@@ -298,9 +302,20 @@ export default defineComponent({
       return startDate.value.add(offsetFromStart, 'day')
     }
 
-    const handleMouseMove = event => {
-      if (!props.rangeState.selecting) return
+    const handleDate = (date, isAdd) => {
+      let newDate = date;
+      const weekSatrtDay = ((newDate.day() === 0 ? 7 : newDate.day()) - firstDayOfWeek);
 
+      if(weekSatrtDay !== 0 && !isAdd) {
+        newDate = newDate.add(weekSatrtDay * -1, 'day')
+      } else if(6 - weekSatrtDay !== 0 && isAdd) {
+        newDate = newDate.add(6 - weekSatrtDay, 'day')
+      }
+
+      return newDate;
+    }
+
+    const handleMouseMove = event => {
       let target = event.target
       if (target.tagName === 'SPAN') {
         target = target.parentNode.parentNode
@@ -313,6 +328,13 @@ export default defineComponent({
       const row = target.parentNode.rowIndex - 1
       const column = target.cellIndex
 
+      if (!props.rangeState.selecting) {
+        moveDate.value = getDateOfCell(row, column)
+
+        return
+      } 
+      moveDate.value = null;
+
       // can not select disabled date
       if (rows.value[row][column].disabled) return
 
@@ -321,11 +343,26 @@ export default defineComponent({
       if (row !== lastRow.value || column !== lastColumn.value) {
         lastRow.value = row
         lastColumn.value = column
+
+        let endDate = handleDate(getDateOfCell(row, column), true);
+
+        if(endDate.unix() < props.minDate.add(1, 'week').unix()) {
+          endDate = handleDate(getDateOfCell(row, column), false);
+
+          ctx.emit('pick', { minDate: handleDate(props.minDate, true), maxDate: null })
+        } else {
+          ctx.emit('pick', { minDate: handleDate(props.minDate, false), maxDate: null })
+        }
+
         ctx.emit('changerange', {
           selecting: true,
-          endDate: getDateOfCell(row, column),
+          endDate,
         })
       }
+    }
+
+    const handleMouseOut = () => {
+      moveDate.value = null;
     }
 
     const handleClick = event => {
@@ -345,11 +382,12 @@ export default defineComponent({
 
       if (cell.disabled || cell.type === 'week') return
 
-      const newDate = getDateOfCell(row, column)
+      const newDate = handleDate(getDateOfCell(row, column), props.rangeState.selecting)
 
       if (props.selectionMode === 'range') {
+        moveDate.value = null;
         if (!props.rangeState.selecting) {
-          ctx.emit('pick', { minDate: newDate, maxDate: null })
+          ctx.emit('pick', { minDate: newDate, maxDate: handleDate(getDateOfCell(row, column), true) }, false)
           ctx.emit('select', true)
         } else {
           if (newDate >= props.minDate) {
@@ -359,27 +397,12 @@ export default defineComponent({
           }
           ctx.emit('select', false)
         }
-      } else if (props.selectionMode === 'day') {
-        ctx.emit('pick', newDate)
-      } else if (props.selectionMode === 'week') {
-        const weekNumber = newDate.week()
-        const value = newDate.year() + 'w' + weekNumber
-        ctx.emit('pick', {
-          year: newDate.year(),
-          week: weekNumber,
-          value: value,
-          date: newDate.startOf('week'),
-        })
-      } else if (props.selectionMode === 'dates') {
-        const newValue = cell.selected
-          ? coerceTruthyValueToArray(props.parsedValue).filter(_ => _.valueOf() !== newDate.valueOf())
-          : coerceTruthyValueToArray(props.parsedValue).concat([newDate])
-        ctx.emit('pick', newValue)
-      }
+      } 
     }
 
     return {
       handleMouseMove,
+      handleMouseOut,
       t,
       rows,
       isWeekActive,

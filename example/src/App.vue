@@ -21,7 +21,7 @@ import { ref } from 'vue'
 export default {
   setup() {
     return {
-      test: ref([])
+      test: ref(['2021-04-12', '2021-04-16'])
     }
   },
 }

@@ -39,6 +39,7 @@ export default defineComponent({
   emits: ['update:modelValue'],
   setup(props, ctx) {
     const commonPicker = ref(null)
+    console.log(DEFAULT_FORMATS_DATEPICKER, DEFAULT_FORMATS_DATE)
     const format = DEFAULT_FORMATS_DATEPICKER[props.type] || DEFAULT_FORMATS_DATE
     const refProps = {
       ...props,
@@ -48,7 +49,7 @@ export default defineComponent({
     }
     ctx.expose(refProps)
     return () => h(CommonPicker, {
-      format,
+      format: 'YYYY年ww周',
       ...props, // allow format to be overwrite
       type: props.type,
       ref: commonPicker,
