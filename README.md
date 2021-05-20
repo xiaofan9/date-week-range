@@ -1,6 +1,8 @@
 ## date-week-range（周范围选择器）
 
-> 基于 element-ui 2.x 开发，可依赖element-ui 2.x使用；也可独立使用，但要引入相应的样式
+> 基于 element-plus 开发。可依赖 element-plus 使用；也可独立使用，但要引入相应的样式。
+
+[v1 版本传送门](https://github.com/xiaofan9/date-week-range/tree/v1)
 
 ### 示例
 
@@ -30,9 +32,9 @@
   
   ```javascript
     // 在 vue-cli 将指定的 node_modules 模块转义成es5：
-    <!-- vue.config.js -->
+    // vue.config.js
     module.exports = {
-      <!-- 省略代码 -->
+      // 省略代码
       transpileDependencies: ['date-week-range/dist', 'element-ui/packages', 'element-ui/src']
     }
   ```
@@ -106,4 +108,4 @@ export default {
 
 ### 文档
 
-本插件是在 element-plus ui框架中的el-date-picker组件基础上进行开发，其文档和[el-date-picker组件](https://element.eleme.cn/#/zh-CN/component/date-picker) type="daterange" 一致。
+本插件是在 element-plus ui框架中的 el-date-picker 组件基础上进行开发，其文档和 [el-date-picker组件](https://element.eleme.cn/#/zh-CN/component/date-picker) type="daterange" 一致。
