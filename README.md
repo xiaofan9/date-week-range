@@ -4,7 +4,7 @@
 
 ### 示例
 
-https://cqe2b.csb.app/
+[v1 版本](https://codepen.io/xiaofan9/pen/jOByExo)、[v2 版本](https://codepen.io/xiaofan9/pen/dyvNPjV)
 
 ### 目的
 
@@ -13,24 +13,23 @@ https://cqe2b.csb.app/
 
 ### 兼容
 
-  - 当前版本暂不支持 vue3.0+；预计在1月初发布支持vue3.0+的第一版。
+  - v1 版本，对应v1分支，仅支持vue2
+  - v2 版本，对应v2分支，仅支持vue3
 
 ### 计划
 
   - ~~1.x 版本，支持 vue2（已完成）~~
-  - 2.x 版本，将进行支持 vue3，计划通过 date-week-range@next 方式升级使用。
+  - ~~2.x 版本，将进行支持 vue3，计划通过 date-week-range@next 方式升级使用。~~
+  - 等待vue3稳定，将会把主版本从 v1 切换至 v2 ，master 分支亦将会同步成 v2 分支。
 
-### 改动
+### 注意
 
-  - 移除自动注入css，改用手动引入方式，以减少包的大小，避免出现样式覆盖情况；样式建议直接引入element-ui的[date-picker.css](https://unpkg.com/element-ui/lib/theme-chalk/date-picker.css)，或者引入[dist/date-picker.css](https://unpkg.com/data-week-range/dist/date-picker.css)；如果全局引入了element-ui 样式，则不需额外引入！
+  - 不会自动注入css，需手动引入，以避免出现样式覆盖情况；如果全局引入了 element-plus 样式，则不需额外引入！
   
-  - 新增esm模块，仅支持es6及以上的浏览器；建议引入esm模块；该模块也可以通过babel 转义成es5，在低版本浏览器浏览器使用。
+  - 本地开发模式，默认使用esm模块，如需转义成es5，请参考：
   
   ```javascript
-    // 引入方式
-    import dateWeekRange from 'date-week-range/dist/date-week-range.esm';
-
-    // 转义成es5：
+    // 在 vue-cli 将指定的 node_modules 模块转义成es5：
     <!-- vue.config.js -->
     module.exports = {
       <!-- 省略代码 -->
@@ -43,7 +42,7 @@ https://cqe2b.csb.app/
 > * #### 安装
 
 ``` bash
-npm install date-week-range --save
+npm install date-week-range@next --save
 ```
 > * #### 注册
 
@@ -51,31 +50,42 @@ npm install date-week-range --save
 
 ```javascript
 import dateWeekRange from 'date-week-range';
-import Vue from 'vue';
+import { createApp } from 'vue';
 
-// 引入样式；如果全局引入了element-ui 样式，则不需额外引入
+// 引入样式；如果全局引入了 element-plus 样式，则不需额外引入
 // 推荐
-import 'element-ui/lib/theme-chalk/date-picker.css'
-// or
-import 'date-week-range/dist/date-picker.css'
+import 'element-plus/lib/theme-chalk/index.css';
 
-Vue.use(dateWeekRange);
+// 或者额外引入
+// import 'element-plus/lib/theme-chalk/el-icon.css'
+// import 'element-plus/lib/theme-chalk/el-date-picker.css'
+
+const app = createApp({
+  /* ... */
+})
+
+app.use(dateWeekRange);
 ```
 
 ##### 局部引入
 
 ```javascript
+<template>
+  <DateWeekRange v-model="test"></DateWeekRange>
+</template>
+
 <script>
-import dateWeekRange from 'date-week-range';
-// 样式，建议在全局中引入；如果全局引入了element-ui 样式，则不需额外引入
-// 推荐
-import 'element-ui/lib/theme-chalk/date-picker.css'
-// or
-import 'date-week-range/dist/date-picker.css'
+import { DateWeekRange } from 'date-week-range';
+// 注意要引入样式！引入方式参考上面
 
 export default {
+  data() {
+    return {
+      test: ''
+    }
+  }
   components: {
-    dateWeekRange
+    DateWeekRange
   }
 }
 </script>
@@ -84,24 +94,16 @@ export default {
 ##### 直接引入
 
 ```html
-<!-- 引入样式；如果全局引入了element-ui 样式，则不需额外引入 -->
+<!-- 引入样式；如果全局引入了element-plus 样式，则不需额外引入 -->
 <!-- 推荐 -->
-<link type="text/css" href="https://unpkg.com/element-ui/lib/theme-chalk/date-picker.css">
+<link type="text/css" href="https://unpkg.com/element-plus/lib/theme-chalk/index.css">
 <!-- or -->
-<link type="text/css" href="https://unpkg.com/date-week-range/dist/date-picker.css">
-<script src="https://unpkg.com/date-week-range"></script>
+<link type="text/css" href="https://unpkg.com/element-plus/lib/theme-chalk/el-icon.css">
+<link type="text/css" href="https://unpkg.com/element-plus/lib/theme-chalk/el-date-picker.css">
+
+<script src="https://unpkg.com/date-week-range@next"></script>
 ```
 
-> * #### 使用
+### 文档
 
-```html
-  <date-week-range 
-    v-model="test" 
-    ...
-  >
-  </date-week-range>
-```
-
-### 配置
-
-组件配置和 [element-ui 中的DatePicker组件](https://element.eleme.cn/#/zh-CN/component/date-picker) type="daterange" 配置相同。
+本插件是在 element-plus ui框架中的el-date-picker组件基础上进行开发，其文档和[el-date-picker组件](https://element.eleme.cn/#/zh-CN/component/date-picker) type="daterange" 一致。

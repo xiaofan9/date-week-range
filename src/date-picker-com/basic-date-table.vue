@@ -40,6 +40,7 @@ import { t } from 'element-plus/lib/locale'
 import {
   coerceTruthyValueToArray,
 } from 'element-plus/lib/utils/util'
+import { handleDate } from '../util';
 
 import {
   defineComponent,
@@ -134,6 +135,7 @@ export default defineComponent({
     }
 
     const moveDate = ref(null);
+    const disabledWeek = ref(null);
 
     const rows = computed(() =>  {
       // TODO: refactory rows / getCellClasses
@@ -228,6 +230,16 @@ export default defineComponent({
           const cellDate = calTime.toDate()
           cell.selected = selectedDate.find(_ => _.valueOf() === calTime.valueOf())
           cell.disabled = props.disabledDate && props.disabledDate(cellDate)
+
+          if(cell.disabled) {
+            if(!disabledWeek.value) {
+              disabledWeek.value = calTime.week();
+            }
+
+            if(disabledWeek.value === calTime.week()) {
+              cell.disabled = false;
+            }
+          }
           cell.customClass = props.cellClassName && props.cellClassName(cellDate)
           row[props.showWeekNumber ? j + 1 : j] = cell
         }
@@ -300,19 +312,6 @@ export default defineComponent({
     const getDateOfCell = (row, column) => {
       const offsetFromStart = row * 7 + (column - (props.showWeekNumber ? 1 : 0)) - offsetDay.value
       return startDate.value.add(offsetFromStart, 'day')
-    }
-
-    const handleDate = (date, isAdd) => {
-      let newDate = date;
-      const weekSatrtDay = ((newDate.day() === 0 ? 7 : newDate.day()) - firstDayOfWeek);
-
-      if(weekSatrtDay !== 0 && !isAdd) {
-        newDate = newDate.add(weekSatrtDay * -1, 'day')
-      } else if(6 - weekSatrtDay !== 0 && isAdd) {
-        newDate = newDate.add(6 - weekSatrtDay, 'day')
-      }
-
-      return newDate;
     }
 
     const handleMouseMove = event => {
