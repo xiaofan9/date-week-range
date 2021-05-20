@@ -5,8 +5,8 @@ import 'dayjs/locale/zh-cn'
 import lang from 'element-plus/lib/locale/lang/zh-cn'
 locale(lang)
 
-function install(Vue, option = {}) {
-  Vue.component(DatePicker.name, DatePicker)
+function install(app, option = {}) {
+  app.component(DatePicker.name, DatePicker)
 
   locale(option.locale)
   if (option.i18n) {
@@ -16,11 +16,6 @@ function install(Vue, option = {}) {
 
 DatePicker.install = install
 DatePicker.version = pkg.version
-
-/* istanbul ignore if */
-if (typeof window !== 'undefined' && window.Vue) {
-  install(window.Vue);
-}
 
 export const DateWeekRange = DatePicker;
 
