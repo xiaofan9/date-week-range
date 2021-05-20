@@ -107,7 +107,7 @@ const NewPopper = {
 };
 
 const DEFAULT_FORMATS = {
-  weekrange: 'yyyy-WW',
+  weekrange: 'yyyy年WW周',
 };
 const HAVE_TRIGGER_TYPES = [
   'weekrange',
@@ -261,8 +261,14 @@ export default {
     valueFormat: String,
     readonly: Boolean,
     placeholder: String,
-    startPlaceholder: String,
-    endPlaceholder: String,
+    startPlaceholder: {
+      type: String,
+      default: '开始周'
+    },
+    endPlaceholder: {
+      type: String,
+      default: '结束周'
+    },
     prefixIcon: String,
     clearIcon: {
       type: String,
@@ -822,3 +828,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.el-date-editor.el-date-editor--weekrange.el-input__inner {
+  width: 360px;
+}
+</style>

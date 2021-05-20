@@ -8,15 +8,12 @@
   </div>
 </template>
 
-<script lang='ts'>
-import { Component, Vue } from 'vue-property-decorator'
-
-@Component
-export default class App extends Vue {
-  test = [new Date()]
+<script>
+export default {
+  data() {
+    return {
+      test: [new Date()]
+    }
+  }
 }
 </script>
-
-<style lang='scss'>
-
-</style>
