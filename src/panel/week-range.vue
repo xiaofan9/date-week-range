@@ -109,7 +109,6 @@
     parseDate,
     isDate,
     modifyDate,
-    modifyTime,
     modifyWithTimeString,
     prevYear,
     nextYear,
@@ -247,8 +246,6 @@
         disabledDate: '',
         cellClassName: '',
         firstDayOfWeek: 7,
-        minTimePickerVisible: false,
-        maxTimePickerVisible: false,
         format: '',
         arrowControl: false,
         unlinkPanels: false,
@@ -264,7 +261,7 @@
     },
 
     watch: {
-      minDate(val) {
+      minDate() {
         this.dateUserInput.min = null;
         this.timeUserInput.min = null;
         this.$nextTick(() => {
@@ -278,10 +275,6 @@
             ];
           }
         });
-        if (val && this.$refs.minTimePicker) {
-          this.$refs.minTimePicker.date = val;
-          this.$refs.minTimePicker.value = val;
-        }
       },
 
       maxDate(val) {
@@ -293,31 +286,14 @@
         }
       },
 
-      minTimePickerVisible(val) {
-        if (val) {
-          this.$nextTick(() => {
-            this.$refs.minTimePicker.date = this.minDate;
-            this.$refs.minTimePicker.value = this.minDate;
-            this.$refs.minTimePicker.adjustSpinners();
-          });
-        }
-      },
-
-      maxTimePickerVisible(val) {
-        if (val) {
-          this.$nextTick(() => {
-            this.$refs.maxTimePicker.date = this.maxDate;
-            this.$refs.maxTimePicker.value = this.maxDate;
-            this.$refs.maxTimePicker.adjustSpinners();
-          });
-        }
-      },
-
       value(newVal) {
         if (!newVal) {
           this.minDate = null;
           this.maxDate = null;
         } else if (Array.isArray(newVal)) {
+          if(newVal?.length < 2) {
+            return;
+          }
           this.minDate = isDate(newVal[0]) ? new Date(newVal[0]) : null;
           this.maxDate = isDate(newVal[1]) ? new Date(newVal[1]) : null;
 
@@ -425,43 +401,6 @@
         }
       },
 
-      handleTimeInput(value, type) {
-        this.timeUserInput[type] = value;
-        if (value.length !== this.timeFormat.length) return;
-        const parsedValue = parseDate(value, this.timeFormat);
-
-        if (parsedValue) {
-          if (type === 'min') {
-            this.minDate = modifyTime(this.minDate, parsedValue.getHours(), parsedValue.getMinutes(), parsedValue.getSeconds());
-            this.$nextTick(() => this.$refs.minTimePicker.adjustSpinners());
-          } else {
-            this.maxDate = modifyTime(this.maxDate, parsedValue.getHours(), parsedValue.getMinutes(), parsedValue.getSeconds());
-            this.$nextTick(() => this.$refs.maxTimePicker.adjustSpinners());
-          }
-        }
-      },
-
-      handleTimeChange(value, type) {
-        const parsedValue = parseDate(value, this.timeFormat);
-        if (parsedValue) {
-          if (type === 'min') {
-            this.minDate = modifyTime(this.minDate, parsedValue.getHours(), parsedValue.getMinutes(), parsedValue.getSeconds());
-            if (this.minDate > this.maxDate) {
-              this.maxDate = this.minDate;
-            }
-            this.$refs.minTimePicker.value = this.minDate;
-            this.minTimePickerVisible = false;
-          } else {
-            this.maxDate = modifyTime(this.maxDate, parsedValue.getHours(), parsedValue.getMinutes(), parsedValue.getSeconds());
-            if (this.maxDate < this.minDate) {
-              this.minDate = this.maxDate;
-            }
-            this.$refs.maxTimePicker.value = this.minDate;
-            this.maxTimePickerVisible = false;
-          }
-        }
-      },
-
       handleRangePick(val, close = true) {
         const defaultTime = this.defaultTime || [];
         const minDate = modifyWithTimeString(val.minDate, defaultTime[0]);
@@ -486,43 +425,6 @@
         if (shortcut.onClick) {
           shortcut.onClick(this);
         }
-      },
-
-      handleMinTimePick(value, visible, first) {
-        this.minDate = this.minDate || new Date();
-        if (value) {
-          this.minDate = modifyTime(this.minDate, value.getHours(), value.getMinutes(), value.getSeconds());
-        }
-
-        if (!first) {
-          this.minTimePickerVisible = visible;
-        }
-
-        if (!this.maxDate || this.maxDate && this.maxDate.getTime() < this.minDate.getTime()) {
-          this.maxDate = new Date(this.minDate);
-        }
-      },
-
-      handleMinTimeClose() {
-        this.minTimePickerVisible = false;
-      },
-
-      handleMaxTimePick(value, visible, first) {
-        if (this.maxDate && value) {
-          this.maxDate = modifyTime(this.maxDate, value.getHours(), value.getMinutes(), value.getSeconds());
-        }
-
-        if (!first) {
-          this.maxTimePickerVisible = visible;
-        }
-
-        if (this.maxDate && this.minDate && this.minDate.getTime() > this.maxDate.getTime()) {
-          this.minDate = new Date(this.maxDate);
-        }
-      },
-
-      handleMaxTimeClose() {
-        this.maxTimePickerVisible = false;
       },
 
       // leftPrev*, rightNext* need to take care of `unlinkPanels`

@@ -2,10 +2,9 @@
   <table
     cellspacing="0"
     cellpadding="0"
-    class="el-date-table"
+    class="el-date-table is-week-mode"
     @click="handleClick"
-    @mousemove="handleMouseMove"
-    :class="{ 'is-week-mode': selectionMode === 'week' || selectionMode === 'weekrange' }">
+    @mousemove="handleMouseMove">
     <tbody>
     <tr>
       <th v-if="showWeekNumber">{{ t('el.datepicker.week') }}</th>
@@ -35,7 +34,7 @@
   import { getFirstDayOfMonth, getDayCountOfMonth, getWeekNumber,
     getStartDateOfMonth, prevDate, nextDate, isDate, clearTime as _clearTime } from 'element-ui/src/utils/date-util';
   import Locale from 'element-ui/src/mixins/locale';
-  import { arrayFindIndex, arrayFind, coerceTruthyValueToArray } from 'element-ui/src/utils/util';
+  import { arrayFind, coerceTruthyValueToArray } from 'element-ui/src/utils/util';
 
   const WEEKS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
   const getDateTimestamp = function(time) {
@@ -46,14 +45,6 @@
     } else {
       return NaN;
     }
-  };
-
-  // remove the first element that satisfies `pred` from arr
-  // return a new array if modification occurs
-  // return the original array otherwise
-  const removeFromArray = function(arr, pred) {
-    const idx = typeof pred === 'function' ? arrayFindIndex(arr, pred) : arr.indexOf(pred);
-    return idx >= 0 ? [...arr.slice(0, idx), ...arr.slice(idx + 1)] : arr;
   };
 
   export default {
@@ -76,10 +67,6 @@
       },
 
       date: {},
-
-      selectionMode: {
-        default: 'day'
-      },
 
       showWeekNumber: {
         type: Boolean,
@@ -306,7 +293,6 @@
       },
 
       isWeekActive(cell) {
-        if (this.selectionMode !== 'week' && this.selectionMode !== 'weekrange') return false;
         const newDate = new Date(this.year, this.month, 1);
         const year = newDate.getFullYear();
         const month = newDate.getMonth();
@@ -370,7 +356,7 @@
 
         const isMinGreatMax = +new Date(this.rangeState.startDate) >= +new Date(this.getDateOfCell(row, 6));
 
-        let column = this.selectionMode === 'weekrange' ? isMinGreatMax ? 0 : 6 : target.cellIndex;
+        let column = isMinGreatMax ? 0 : 6;
 
         const findIndex = this.rows[row].findIndex(item => !item.disabled);
         const isExistDis = this.rows[row].some(item => item.disabled);
@@ -388,11 +374,11 @@
           const minDateList = this.rangeState.minDateList;
           const endDate = this.getDateOfCell(row, column);
 
-          if(isMinGreatMax && !this.isMinGreatMax && minDateList.length === 2) {
+          if(isMinGreatMax && !this.isMinGreatMax && minDateList.length === 2 || this.minDate.getTime() > endDate.getTime()) {
             this.$emit('pick', {minDate: minDateList[1], maxDate: null});
 
             this.isMinGreatMax = true;
-          } else if(this.isMinGreatMax && !isMinGreatMax) {
+          } else if(this.isMinGreatMax && !isMinGreatMax || this.minDate.getTime() < endDate.getTime()) {
             this.$emit('pick', {minDate: minDateList[0], maxDate: null});
 
             this.isMinGreatMax = false;
@@ -428,12 +414,12 @@
         if (target.tagName !== 'TD') return;
 
         const row = target.parentNode.rowIndex - 1;
-        let column = this.selectionMode === 'week' ? 1 : this.selectionMode === 'weekrange' ? this.rangeState.selecting ? 6 : 0 : target.cellIndex;
+        let column =this.rangeState.selecting ? 6 : 0;
 
         const findIndex = this.rows[row].findIndex(item => !item.disabled);
         const isExistDis = this.rows[row].some(item => item.disabled);
 
-        if(this.selectionMode === 'weekrange' && this.rangeState.startDate && this.rangeState.selecting) {
+        if(this.rangeState.startDate && this.rangeState.selecting) {
           column = +new Date(this.rangeState.startDate) >= +new Date(this.getDateOfCell(row, 6)) ? 0 : 6;
         }
 
@@ -447,55 +433,43 @@
 
         const newDate = this.getDateOfCell(row, column);
 
-        if (this.selectionMode === 'range' || this.selectionMode === 'weekrange') {
-          if (!this.rangeState.selecting) {
-            this.rangeState.startDate = newDate;
-            this.rangeState.minDateList = [
-              this.getDateOfCell(row, 0),
-              this.getDateOfCell(row, 6)
-            ];
+        if (!this.rangeState.selecting) {
+          this.rangeState.startDate = newDate;
+          this.rangeState.minDateList = [
+            this.getDateOfCell(row, 0),
+            this.getDateOfCell(row, 6)
+          ];
 
-            this.$emit('pick', {minDate: newDate, maxDate: null});
-            this.rangeState.selecting = true;
+          this.$emit('pick', {minDate: newDate, maxDate: null});
+          this.rangeState.selecting = true;
 
-            this.$nextTick(() =>{
-              this.handleMouseMove({
-                target: {
-                  tagName:'TD',
-                  parentNode: {
-                    rowIndex: row + 1,
-                    cellIndex: column
-                  }
+          this.$nextTick(() =>{
+            this.handleMouseMove({
+              target: {
+                tagName:'TD',
+                parentNode: {
+                  rowIndex: row + 1,
+                  cellIndex: column
                 }
-              })
+              }
             })
+          })
+        } else {
+          if (newDate >= this.minDate) {
+            this.$emit('pick', {minDate: this.minDate, maxDate: newDate});
           } else {
-            if (newDate >= this.minDate) {
-              this.$emit('pick', {minDate: this.minDate, maxDate: newDate});
-            } else {
-              this.$emit('pick', {minDate: newDate, maxDate: this.minDate});
-            }
-            this.rangeState.selecting = false;
+            this.$emit('pick', {minDate: newDate, maxDate: this.minDate});
           }
-        } else if (this.selectionMode === 'day') {
-          this.$emit('pick', newDate);
-        } else if (this.selectionMode === 'week') {
-          const weekNumber = getWeekNumber(newDate);
-          const value = newDate.getFullYear() + 'w' + weekNumber;
-          this.$emit('pick', {
-            year: newDate.getFullYear(),
-            week: weekNumber,
-            value: value,
-            date: newDate
-          });
-        } else if (this.selectionMode === 'dates') {
-          const value = this.value || [];
-          const newValue = cell.selected
-            ? removeFromArray(value, date => date.getTime() === newDate.getTime())
-            : [...value, newDate];
-          this.$emit('pick', newValue);
-        }
+          this.rangeState.selecting = false;
+        } 
       }
     }
   };
 </script>
+
+<style>
+.el-date-table .el-date-table__row:hover td.prev-month div,
+.el-date-table .el-date-table__row:hover td.next-month div {
+  background-color: #fff
+}
+</style>
