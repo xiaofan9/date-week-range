@@ -1,6 +1,8 @@
 ## date-week-range（周范围选择器）
 
-> 基于 element-plus 开发。可依赖 element-plus 使用；也可独立使用，但要引入相应的样式。
+> v1 版本基于 element-ui 2.x 开发，可依赖 element-ui 2.x 使用；也可独立使用，但要引入相应的样式
+
+> v2 版本基于 element-plus 开发。可依赖 element-plus 使用；也可独立使用，但要引入相应的样式。
 
 [v1 版本传送门](https://github.com/xiaofan9/date-week-range/tree/v1)
 
