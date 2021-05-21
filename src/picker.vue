@@ -1,7 +1,7 @@
 <template>
   <el-input
     class="el-date-editor"
-    :class="'el-date-editor--' + (type || '')"
+       :class="'el-date-editor--' + (type || '')"
     :readonly="!editable || readonly"
     :disabled="pickerDisabled"
     :size="pickerSize"
@@ -86,7 +86,7 @@
 <script>
 import Vue from 'vue';
 import Clickoutside from 'element-ui/src/utils/clickoutside';
-import { formatDate, isDateObject, getWeekNumber } from 'element-ui/src/utils/date-util';
+import { formatDate, parseDate, isDateObject, getWeekNumber } from 'element-ui/src/utils/date-util';
 import Popper from 'element-ui/src/utils/vue-popper';
 import Emitter from 'element-ui/src/mixins/emitter';
 import ElInput from 'element-ui/packages/input';
@@ -113,6 +113,24 @@ const HAVE_TRIGGER_TYPES = [
   'weekrange',
 ];
 
+const DATE_PARSER = function(text, format) {
+  if (format === 'timestamp') return new Date(Number(text));
+  return parseDate(text, format);
+};
+
+const RANGE_PARSER = function(array, format, separator) {
+  if (!Array.isArray(array)) {
+    array = array.split(separator);
+  }
+  if (array.length === 2) {
+    const range1 = array[0];
+    const range2 = array[1];
+
+    return [DATE_PARSER(range1, format), DATE_PARSER(range2, format)];
+  }
+  return [];
+};
+
 const TYPE_VALUE_RESOLVER_MAP = {
   default: {
     formatter(value) {
@@ -127,6 +145,36 @@ const TYPE_VALUE_RESOLVER_MAP = {
   weekrange: {
     formatter(value, format) {
       function getDate(value, isChange) {
+        // 是否闰年
+        function isLeapYear(year) {
+          return (year%4==0 && year%100!=0 || year%400==0);
+        }
+
+        // 判断天数
+        function getDays(date) {
+          const year = date.getFullYear(),
+                month = date.getMonth() + 1,
+                day = date.getDate();
+
+          let days = day;
+          
+          //天数没有规律,故放在一个数组中
+          const monthDays = [31,28,31,30,31,30,31,31,30,31,30,31];
+          for(let i= 0; i< month-1;i++) {  //传进来的月份,对应的下标是-1的
+            days += monthDays[i];
+          }
+
+          //如果是闰年,天数加一
+          if(isLeapYear(year) && month > 2) {
+            days++;
+          }
+          return days++;
+        }
+
+        const y = value.getFullYear();
+        const yearOneDateSun = new Date(y + '-01-01').getDay() || 7;
+        const days = getDays(value);
+
         if(isChange) {
           value = new Date(+new Date(value) + 1000 * 60 * 60 * 24);
         }
@@ -139,6 +187,10 @@ const TYPE_VALUE_RESOLVER_MAP = {
           trueDate.setDate(trueDate.getDate() + 3 - (trueDate.getDay() + 6) % 7);
         }
         let date = formatDate(trueDate, format);
+
+        if(7 - yearOneDateSun < 4 && 7 - yearOneDateSun >= days) {
+          date = date.replace(new RegExp(y, 'ig'), y - 1);
+        }
 
         date = /WW/.test(date)
           ? date.replace(/WW/, week < 10 ? '0' + week : week)
@@ -163,10 +215,7 @@ const TYPE_VALUE_RESOLVER_MAP = {
       
       return dateList;
     },
-    parser(text, format) {
-      // parse as if a normal date
-      return TYPE_VALUE_RESOLVER_MAP.date.parser(text, format);
-    }
+    parser: RANGE_PARSER
   },
 };
 const PLACEMENT_MAP = {
@@ -261,14 +310,8 @@ export default {
     valueFormat: String,
     readonly: Boolean,
     placeholder: String,
-    startPlaceholder: {
-      type: String,
-      default: '开始周'
-    },
-    endPlaceholder: {
-      type: String,
-      default: '结束周'
-    },
+    startPlaceholder: String,
+    endPlaceholder: String,
     prefixIcon: String,
     clearIcon: {
       type: String,
@@ -400,7 +443,7 @@ export default {
     },
 
     selectionMode() {
-      return 'week';
+      return 'weekrange';
     },
 
     haveTrigger() {
@@ -419,7 +462,7 @@ export default {
         ];
       } else if (this.userInput !== null) {
         return this.userInput;
-      } else if (formattedValue) {
+      } else if (formattedValue && !Array.isArray(formattedValue) || Array.isArray(formattedValue) && formattedValue.length >= 2) {
         return formattedValue;
       } else {
         return '';

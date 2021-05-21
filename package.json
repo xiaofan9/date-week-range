@@ -1,8 +1,9 @@
 {
   "name": "date-week-range",
-  "version": "1.0.3",
+  "version": "1.0.4-beta.1",
   "description": "date-week-range",
-  "main": "dist/date-week-range.js",
+  "main": "dist/date-week-range.min.js",
+  "module": "dist/date-week-range.esm.js",
   "typings": "types/index.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -24,6 +25,7 @@
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.0.1",
+    "@rollup/plugin-replace": "^2.4.2",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
@@ -65,5 +67,5 @@
     "types"
   ],
   "homepage": "https://github.com/xiaofan9/date-week-range#readme",
-  "unpkg": "dist/date-week-range.js"
+  "unpkg": "dist/date-week-range.min.js"
 }
