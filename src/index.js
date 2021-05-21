@@ -19,6 +19,6 @@ DatePicker.version = pkg.version
 
 export const DateWeekRange = DatePicker;
 
-export { locale }
+export { locale, install }
 
 export default DatePicker
