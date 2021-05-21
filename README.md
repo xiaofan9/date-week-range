@@ -10,7 +10,7 @@
 
 ### 目的
 
-  - 项目需求，需要用到周选择器这功能，但没找到相应的组件库，故自己基于element-ui改造了个。
+  - 项目需求，需要用到周选择器这功能，但没找到相应的组件库，故自己基于 element-ui/element-plus 改造了个。
 
 
 ### 兼容
@@ -35,7 +35,7 @@
     // vue.config.js
     module.exports = {
       // 省略代码
-      transpileDependencies: ['date-week-range/dist', 'element-ui/packages', 'element-ui/src']
+      transpileDependencies: ['date-week-range', 'element-plus']
     }
   ```
 
@@ -45,18 +45,19 @@
 
 ``` bash
 npm install date-week-range@next --save
+yarn add date-week-range@next --save
 ```
 > * #### 注册
 
 ##### 全局注册
 
 ```javascript
-import dateWeekRange from 'date-week-range';
-import { createApp } from 'vue';
+import DateWeekRange from 'date-week-range'
+import { createApp } from 'vue'
 
 // 引入样式；如果全局引入了 element-plus 样式，则不需额外引入
-// 推荐
-import 'element-plus/lib/theme-chalk/index.css';
+// 全局引入 element-plus 样式
+import 'element-plus/lib/theme-chalk/index.css'
 
 // 或者额外引入
 // import 'element-plus/lib/theme-chalk/el-icon.css'
@@ -66,10 +67,10 @@ const app = createApp({
   /* ... */
 })
 
-app.use(dateWeekRange);
+app.use(DateWeekRange)
 ```
 
-##### 局部引入
+##### 局部注册
 
 ```javascript
 <template>
@@ -77,7 +78,7 @@ app.use(dateWeekRange);
 </template>
 
 <script>
-import { DateWeekRange } from 'date-week-range';
+import { DateWeekRange } from 'date-week-range'
 // 注意要引入样式！引入方式参考上面
 
 export default {
@@ -85,7 +86,7 @@ export default {
     return {
       test: ''
     }
-  }
+  },
   components: {
     DateWeekRange
   }
@@ -93,19 +94,69 @@ export default {
 </script>
 ```
 
-##### 直接引入
+##### 浏览器使用
 
 ```html
-<!-- 引入样式；如果全局引入了element-plus 样式，则不需额外引入 -->
-<!-- 推荐 -->
+<!-- 引入样式。如果全局引入了element-plus 样式，则不需额外引入 -->
+<!-- 全局引入 element-plus 样式 -->
 <link type="text/css" href="https://unpkg.com/element-plus/lib/theme-chalk/index.css">
-<!-- or -->
+<!-- 或者额外引入 -->
 <link type="text/css" href="https://unpkg.com/element-plus/lib/theme-chalk/el-icon.css">
 <link type="text/css" href="https://unpkg.com/element-plus/lib/theme-chalk/el-date-picker.css">
 
 <script src="https://unpkg.com/date-week-range@next"></script>
+
+<body>
+  <div id="app">
+    <date-week-range v-model="test"></date-week-range>
+  </div>
+</body>
+
+<script>
+const app = window.Vue.createApp({
+  data() {
+    return {
+      test: ''
+    }
+  }
+})
+app.use(window.DateWeekRange)
+app.mount("#app")
+</script>
+```
+
+### 国际化
+
+> 默认使用中文
+
+全局注册时
+```javascript
+import { createApp } from 'vue'
+import App from './App.vue'
+import DateWeekRange from 'date-week-range'
+import 'dayjs/locale/zh-cn'
+import locale from 'element-plus/lib/locale/lang/zh-cn'
+
+const app = createApp(App)
+
+app.use(DateWeekRange, { locale })
+app.mount('#app')
+
+export default app
+```
+
+局部注册时
+```javascript
+<script>
+import { DateWeekRange, locale } from 'date-week-range'
+import lang from 'element-plus/lib/locale/lang/zh-cn'
+import 'dayjs/locale/zh-cn'
+
+locale(lang)
+/* 省略… */
+</script>
 ```
 
 ### 文档
 
-本插件是在 element-plus ui框架中的 el-date-picker 组件基础上进行开发，其文档和 [el-date-picker组件](https://element.eleme.cn/#/zh-CN/component/date-picker) type="daterange" 一致。
+本插件是在 element-plus 框架中的 el-date-picker 组件基础上进行开发，其文档和 [el-date-picker组件](https://element-plus.org/#/zh-CN/component/date-picker) type="daterange" 一致。
