@@ -62,7 +62,7 @@ export interface DatePickerOptions {
 }
 
 /** DatePicker Component */
-export declare class ElDatePicker extends ElementUIComponent {
+declare class ElDatePicker extends ElementUIComponent {
   /** The value of the date picker */
   value: Date | string | Date[] | string[]
 
@@ -121,3 +121,9 @@ export declare class ElDatePicker extends ElementUIComponent {
 }
 
 export default class DatePicker extends ElDatePicker {}
+
+export const DateWeekRange = ElDatePicker
+
+export const locale: any;
+
+export const version: string;
