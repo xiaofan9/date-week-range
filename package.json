@@ -1,18 +1,19 @@
 {
   "name": "date-week-range",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "description": "date-week-range",
   "main": "dist/date-week-range.min.js",
   "module": "src/date-week-range.esm.js",
   "typings": "typings/index.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve",
+    "build:helper": "node ./build/helper.js",
     "build": "node ./build/build.js",
     "lint": "vue-cli-service lint"
   },
   "peerDependencies": {
-    "vue": ">= 3 < 4",
-    "element-plus": ">= 1"
+    "element-plus": ">= 1",
+    "vue": ">= 3 < 4"
   },
   "dependencies": {
     "core-js": "^3.6.5",
@@ -22,7 +23,6 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.12.10",
-    "@babel/preset-env": "^7.11.5",
     "@rollup/plugin-babel": "^5.2.2",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-json": "^4.1.0",
@@ -32,6 +32,7 @@
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.11",
+    "components-helper": "^1.0.3",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "gulp": "^4.0.2",
@@ -39,8 +40,7 @@
     "merge": "^1.2.1",
     "rollup": "^2.35.1",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-vue": "^6.0.0",
-    "vue-loader": "^16.2.0"
+    "rollup-plugin-vue": "^6.0.0"
   },
   "repository": {
     "type": "git",
