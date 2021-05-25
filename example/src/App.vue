@@ -1,20 +1,18 @@
 <template>
   <div id="app">
-    <date-week-range
+    <DateWeekRange
       v-model="test"
       :clearable='false'
       range-separator="-"
       :picker-options="{firstDayOfWeek: 7}"
-    ></date-week-range>
-    <DateWeekRange></DateWeekRange>
+      value-format="yyyy-WW"
+    ></DateWeekRange>
   </div>
 </template>
 
 <script>
-import { DateWeekRange, locale } from '../../src'
-import lang from 'element-ui/lib/locale/lang/en'
+import { DateWeekRange } from '../../src'
 
-locale.use(lang)
 export default {
   data() {
     return {
@@ -23,6 +21,11 @@ export default {
   },
   components: {
     DateWeekRange
+  },
+  watch: {
+    test() {
+      console.log(this.test)
+    }
   }
 }
 </script>

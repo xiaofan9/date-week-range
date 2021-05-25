@@ -1,6 +1,5 @@
 import { ElementUIComponent, ElementUIComponentSize, ElementUIHorizontalAlignment } from 'element-ui/types/component'
 
-export type DatePickerType = 'year' | 'month' | 'date' | 'datetime' | 'week' | 'datetimerange' | 'daterange' | 'dates'
 export type FirstDayOfWeek = 1 | 2 | 3 | 4 | 5 | 6 | 7
 
 export interface DisabledDateChecker {
@@ -90,9 +89,6 @@ export declare class ElDatePicker extends ElementUIComponent {
 
   /** Placeholder for the end date in range mode */
   endPlaceholder: string
-
-  /** Type of the picker */
-  type: DatePickerType
 
   /** Format of the picker */
   format: string
