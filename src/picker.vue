@@ -53,11 +53,8 @@
       :value="displayValue && displayValue[0]"
       :disabled="pickerDisabled"
       v-bind="firstInputId"
-      :readonly="!editable || readonly"
       :name="name && name[0]"
-      @input="handleStartInput"
-      @change="handleStartChange"
-      @focus="handleFocus"
+      readonly
       class="el-range-input">
     <slot name="range-separator">
       <span class="el-range-separator">{{ rangeSeparator }}</span>
@@ -68,11 +65,8 @@
       :value="displayValue && displayValue[1]"
       :disabled="pickerDisabled"
       v-bind="secondInputId"
-      :readonly="!editable || readonly"
       :name="name && name[1]"
-      @input="handleEndInput"
-      @change="handleEndChange"
-      @focus="handleFocus"
+      readonly
       class="el-range-input">
     <i
       @click="handleClickIcon"
@@ -86,7 +80,7 @@
 <script>
 import Vue from 'vue';
 import Clickoutside from 'element-ui/src/utils/clickoutside';
-import { formatDate, parseDate, isDateObject, getWeekNumber } from 'element-ui/src/utils/date-util';
+import { formatDate, isDateObject, getWeekNumber, parseDate } from 'element-ui/src/utils/date-util';
 import Popper from 'element-ui/src/utils/vue-popper';
 import Emitter from 'element-ui/src/mixins/emitter';
 import ElInput from 'element-ui/packages/input';
@@ -144,7 +138,7 @@ const TYPE_VALUE_RESOLVER_MAP = {
   },
   weekrange: {
     formatter(value, format) {
-      function getDate(value, isChange) {
+      function getDate(value) {
         // 是否闰年
         function isLeapYear(year) {
           return (year%4==0 && year%100!=0 || year%400==0);
@@ -171,13 +165,13 @@ const TYPE_VALUE_RESOLVER_MAP = {
           return days++;
         }
 
+        if(!value) {
+          return;
+        }
+
         const y = value.getFullYear();
         const yearOneDateSun = new Date(y + '-01-01').getDay() || 7;
         const days = getDays(value);
-
-        if(isChange) {
-          value = new Date(+new Date(value) + 1000 * 60 * 60 * 24);
-        }
 
         const week = getWeekNumber(value);
         const month = value.getMonth();
@@ -202,15 +196,9 @@ const TYPE_VALUE_RESOLVER_MAP = {
         return getDate(value);
       }
 
-      let isFirst = true;
-
       const dateList = []
       for(const val of value) {
-        dateList.push(getDate(val, isFirst));
-
-        if(isFirst) {
-          isFirst = false;
-        }
+        dateList.push(getDate(val));
       }
       
       return dateList;
@@ -363,7 +351,8 @@ export default {
       showClose: false,
       userInput: null,
       valueOnOpen: null, // value when picker opens, used to determine whether to emit change
-      unwatchPickerOptions: null
+      unwatchPickerOptions: null,
+      dateList: []
     };
   },
 
@@ -442,10 +431,6 @@ export default {
       return this.prefixIcon || 'el-icon-date';
     },
 
-    selectionMode() {
-      return 'weekrange';
-    },
-
     haveTrigger() {
       if (typeof this.showTrigger !== 'undefined') {
         return this.showTrigger;
@@ -476,9 +461,21 @@ export default {
       if (valueIsDateObject) {
         return this.value;
       }
-
       if (this.valueFormat) {
-        return parseAsFormatAndType(this.value, this.valueFormat, this.type, this.rangeSeparator) || this.value;
+        if(this.dateList?.length) {
+          return this.dateList;
+        } else {
+          if(Array.isArray(this.value)) {
+            this.value.forEach(v => {
+              this.dateList.push(new Date(v))
+            })
+          } else {
+            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+            this.dateList = this.value || [];
+          }
+
+          return this.dateList;
+        }
       }
 
       // NOTE: deal with common but incorrect usage, should remove in next major version
@@ -597,48 +594,6 @@ export default {
         this.emitInput(null);
         this.emitChange(null);
         this.userInput = null;
-      }
-    },
-
-    handleStartInput(event) {
-      if (this.userInput) {
-        this.userInput = [event.target.value, this.userInput[1]];
-      } else {
-        this.userInput = [event.target.value, null];
-      }
-    },
-
-    handleEndInput(event) {
-      if (this.userInput) {
-        this.userInput = [this.userInput[0], event.target.value];
-      } else {
-        this.userInput = [null, event.target.value];
-      }
-    },
-
-    handleStartChange() {
-      const value = this.parseString(this.userInput && this.userInput[0]);
-      if (value) {
-        this.userInput = [this.formatToString(value), this.displayValue[1]];
-        const newValue = [value, this.picker.value && this.picker.value[1]];
-        this.picker.value = newValue;
-        if (this.isValidValue(newValue)) {
-          this.emitInput(newValue);
-          this.userInput = null;
-        }
-      }
-    },
-
-    handleEndChange() {
-      const value = this.parseString(this.userInput && this.userInput[1]);
-      if (value) {
-        this.userInput = [this.displayValue[0], this.formatToString(value)];
-        const newValue = [this.picker.value && this.picker.value[0], value];
-        this.picker.value = newValue;
-        if (this.isValidValue(newValue)) {
-          this.emitInput(newValue);
-          this.userInput = null;
-        }
       }
     },
 
@@ -771,7 +726,6 @@ export default {
       this.popperElm = this.picker.$el;
       this.picker.width = this.reference.getBoundingClientRect().width;
       this.picker.showTime = false;
-      this.picker.selectionMode = this.selectionMode;
       this.picker.unlinkPanels = this.unlinkPanels;
       this.picker.arrowControl = this.arrowControl || this.timeArrowControl || false;
       this.$watch('format', (format) => {
@@ -852,6 +806,7 @@ export default {
     },
 
     emitInput(val) {
+      this.dateList = val;
       const formatted = this.formatToValue(val);
       if (!valueEquals(this.value, formatted)) {
         this.$emit('input', formatted);

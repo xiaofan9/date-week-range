@@ -34,7 +34,7 @@
   import { getFirstDayOfMonth, getDayCountOfMonth, getWeekNumber,
     getStartDateOfMonth, prevDate, nextDate, isDate, clearTime as _clearTime } from 'element-ui/src/utils/date-util';
   import Locale from 'element-ui/src/mixins/locale';
-  import { arrayFind, coerceTruthyValueToArray } from 'element-ui/src/utils/util';
+  import { arrayFind } from 'element-ui/src/utils/util';
 
   const WEEKS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
   const getDateTimestamp = function(time) {
@@ -132,7 +132,7 @@
         const startDate = this.startDate;
         const disabledDate = this.disabledDate;
         const cellClassName = this.cellClassName;
-        const selectedDate = this.selectionMode === 'dates' ? coerceTruthyValueToArray(this.value) : [];
+        const selectedDate = [];
         const now = getDateTimestamp(new Date());
 
         for (let i = 0; i < 6; i++) {
@@ -187,17 +187,6 @@
             cell.customClass = typeof cellClassName === 'function' && cellClassName(cellDate);
             this.$set(row, this.showWeekNumber ? j + 1 : j, cell);
           }
-
-          if (this.selectionMode === 'week') {
-            const start = this.showWeekNumber ? 1 : 0;
-            const end = this.showWeekNumber ? 7 : 6;
-            const isWeekActive = this.isWeekActive(row[start + 1]);
-
-            row[start].inRange = isWeekActive;
-            row[start].start = isWeekActive;
-            row[end].inRange = isWeekActive;
-            row[end].end = isWeekActive;
-          }
         }
 
         return rows;
@@ -239,7 +228,6 @@
       },
 
       getCellClasses(cell) {
-        const selectionMode = this.selectionMode;
         const defaultValue = this.defaultValue ? Array.isArray(this.defaultValue) ? this.defaultValue : [this.defaultValue] : [];
 
         const classes = [];
@@ -254,10 +242,6 @@
 
         if (cell.type === 'normal' && defaultValue.some(date => this.cellMatchesDate(cell, date))) {
           classes.push('default');
-        }
-
-        if (selectionMode === 'day' && (cell.type === 'normal' || cell.type === 'today') && this.cellMatchesDate(cell, this.value)) {
-          classes.push('current');
         }
 
         if (cell.inRange && ((cell.type === 'normal' || cell.type === 'today')) ) {
@@ -340,7 +324,7 @@
         }
       },
 
-      handleMouseMove(event) {
+      handleMouseMove(event, isManual) {
         if (!this.rangeState.selecting) return;
 
         let target = event.target;
@@ -374,14 +358,16 @@
           const minDateList = this.rangeState.minDateList;
           const endDate = this.getDateOfCell(row, column);
 
-          if(isMinGreatMax && !this.isMinGreatMax && minDateList.length === 2 || this.minDate.getTime() > endDate.getTime()) {
-            this.$emit('pick', {minDate: minDateList[1], maxDate: null});
+          if(!isManual) {
+            if(isMinGreatMax && !this.isMinGreatMax && minDateList.length === 2 || this.minDate.getTime() > endDate.getTime()) {
+              this.$emit('pick', {minDate: minDateList[1], maxDate: null});
 
-            this.isMinGreatMax = true;
-          } else if(this.isMinGreatMax && !isMinGreatMax || this.minDate.getTime() < endDate.getTime()) {
-            this.$emit('pick', {minDate: minDateList[0], maxDate: null});
+              this.isMinGreatMax = true;
+            } else if(this.isMinGreatMax && !isMinGreatMax || this.minDate.getTime() < endDate.getTime()) {
+              this.$emit('pick', {minDate: minDateList[0], maxDate: null});
 
-            this.isMinGreatMax = false;
+              this.isMinGreatMax = false;
+            }
           }
 
           this.$nextTick(() => {
@@ -452,7 +438,7 @@
                   cellIndex: column
                 }
               }
-            })
+            }, true)
           })
         } else {
           if (newDate >= this.minDate) {
