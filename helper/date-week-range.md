@@ -1,7 +1,7 @@
 
 ## DateWeekRange
 
-Use the selector to select the range of weeks.
+This is a week range selector.
 
 ### Attributes
 | Attribute      | Description          | Type      | Accepted Values       | Default  |

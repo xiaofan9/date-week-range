@@ -1,7 +1,7 @@
 {
   "name": "date-week-range",
-  "version": "1.0.4-beta.4",
-  "description": "date-week-range",
+  "version": "1.0.4",
+  "description": "This is a week range selector.",
   "main": "dist/date-week-range.min.js",
   "module": "dist/date-week-range.esm.js",
   "typings": "typings/index.d.ts",
