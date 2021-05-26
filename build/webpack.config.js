@@ -1,7 +1,7 @@
 const path = require('path')
-// const webpack = require('webpack')
+const webpack = require('webpack')
 const { VueLoaderPlugin } = require('vue-loader')
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const pkg = require("../package.json");
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
@@ -17,7 +17,12 @@ let externals = [
 const plugins = [
   new VueLoaderPlugin(),
   new ProgressBarPlugin(),
-  // new BundleAnalyzerPlugin(),
+  new BundleAnalyzerPlugin(),
+  new webpack.NormalModuleReplacementPlugin(
+    // eslint-disable-next-line no-useless-escape
+    /element-plus[\/\\]lib[\/\\]locale[\/\\]lang[\/\\]en/,
+    'element-plus/lib/locale/lang/zh-cn',
+  ),
 ]
 
 const entry = path.resolve(__dirname, '../src/index.js')
