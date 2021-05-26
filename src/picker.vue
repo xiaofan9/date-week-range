@@ -1,7 +1,6 @@
 <template>
   <el-input
-    class="el-date-editor"
-       :class="'el-date-editor--' + (type || '')"
+    class="el-date-editor el-date-editor--daterange"
     :readonly="!editable || readonly"
     :disabled="pickerDisabled"
     :size="pickerSize"
@@ -826,9 +825,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.el-date-editor.el-date-editor--weekrange.el-input__inner {
-  width: 360px;
-}
-</style>

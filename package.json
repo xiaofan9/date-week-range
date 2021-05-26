@@ -1,13 +1,15 @@
 {
   "name": "date-week-range",
-  "version": "1.0.4-beta.3",
+  "version": "1.0.4-beta.4",
   "description": "date-week-range",
   "main": "dist/date-week-range.min.js",
   "module": "dist/date-week-range.esm.js",
   "typings": "typings/index.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "node ./build/build.js",
+    "build": "npm run build:esm && npm run build:lib && npm run build:helper",
+    "build:esm": "node ./build/build.js",
+    "build:lib": "webpack --config ./build/webpack.config.js",
     "build:helper": "node ./build/helper.js",
     "lint": "vue-cli-service lint"
   },
@@ -17,7 +19,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "element-ui": "^2.13.2",
-    "vue": "^2.6.11"
+    "vue": "^2.6.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.14.3",
@@ -30,16 +32,20 @@
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "components-helper": "^1.0.3",
+    "element-plus": "^1.0.2-beta.44",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "gulp": "^4.0.2",
     "gulp-json-editor": "^2.5.4",
     "merge": "^1.2.1",
+    "progress-bar-webpack-plugin": "^2.1.0",
     "rollup": "^2.35.1",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-vue": "^5.1.9",
     "terser-webpack-plugin": "^4.2.3",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "webpack-bundle-analyzer": "^4.4.2",
+    "webpack-cli": "^4.7.0"
   },
   "repository": {
     "type": "git",
