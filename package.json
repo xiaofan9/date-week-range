@@ -1,6 +1,6 @@
 {
   "name": "date-week-range",
-  "version": "2.0.0-beta.5",
+  "version": "2.0.0-beta.6",
   "description": "date-week-range",
   "main": "dist/date-week-range.min.js",
   "module": "src/date-week-range.esm.js",
@@ -69,7 +69,7 @@
   "files": [
     "dist",
     "src",
-    "types"
+    "typings"
   ],
   "homepage": "https://github.com/xiaofan9/date-week-range#readme",
   "unpkg": "dist/date-week-range.min.js"
