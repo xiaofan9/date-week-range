@@ -452,10 +452,3 @@
     }
   };
 </script>
-
-<style>
-.el-date-table .el-date-table__row:hover td.prev-month div,
-.el-date-table .el-date-table__row:hover td.next-month div {
-  background-color: #fff
-}
-</style>

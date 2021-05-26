@@ -20,15 +20,15 @@ const outputConfig = {
     format: "esm",
     file: path.resolve(foldPath, `dist/${pkg.name}.esm.js`)
   },
-  umd: {
-    format: "umd",
-    file: path.resolve(foldPath, `dist/${pkg.name}.min.js`),
-    name: "DateWeekRange",
-    globals: {
-      vue: "Vue"
-    },
-    exports: "named"
-  }
+  // umd: {
+  //   format: "umd",
+  //   file: path.resolve(foldPath, `dist/${pkg.name}.min.js`),
+  //   name: "DateWeekRange",
+  //   globals: {
+  //     vue: "Vue"
+  //   },
+  //   exports: "named"
+  // }
 };
 const argument = process.argv.splice(2);
 const isDebug = argument.includes('debug');
@@ -70,7 +70,7 @@ const runBuild = async () => {
         cjs({
           // 开启混合模式转换
           transformMixedEsModules: true,
-          sourceMap: true
+          sourceMap: false
         }),
       ]),
     ];
