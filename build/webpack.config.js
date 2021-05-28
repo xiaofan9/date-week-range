@@ -20,8 +20,8 @@ const plugins = [
   // new BundleAnalyzerPlugin(),
   new webpack.NormalModuleReplacementPlugin(
     // eslint-disable-next-line no-useless-escape
-    /element-plus[\/\\]lib[\/\\]locale[\/\\]lang[\/\\]en/,
-    'element-plus/lib/locale/lang/zh-cn',
+    /element-plus[/\\]lib[/\\]locale[/\\]lang[/\\]en/,
+    'zh-cn.js',
   ),
 ]
 
