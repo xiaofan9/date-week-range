@@ -1,4 +1,4 @@
-import DatePicker from './picker/date-picker'
+import DatePicker from './week-picker'
 import pkg from '../package.json';
 import locale from 'element-ui/src/locale';
 

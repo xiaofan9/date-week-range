@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import { DateWeekRange } from '../../lib/date-week-range.min'
-
+import { DateWeekRange } from '../../src/index'
+// import moment from 'moment'
 export default {
   data() {
     return {

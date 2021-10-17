@@ -1,18 +1,18 @@
 
-## DateWeekRange
+# DateWeekRange
 
 This is a week range selector.
 
-### Attributes
+## Attributes
+
 | Attribute      | Description          | Type      | Accepted Values       | Default  |
 |---------- |-------------- |---------- |--------------------------------  |-------- |
-| value / v-model | binding value | date(DatePicker) / array(DateRangePicker) | — | — |
+| value / v-model | binding value | array(DateRangePicker) | — | — |
 | readonly | whether DatePicker is read only | boolean | — | false |
 | disabled | whether DatePicker is disabled | boolean | — | false |
 | size | size of Input | string | large/small/mini | — |
 | editable | whether the input is editable | boolean | — | true |
 | clearable | whether to show clear button | boolean | — | true |
-| placeholder | placeholder in non-range mode | string | — | — |
 | start-placeholder | placeholder for the start date in range mode | string | — | — |
 | end-placeholder | placeholder for the end date in range mode | string | — | — |
 | format | format of the displayed value in the input box | string | see [date formats](https://element.eleme.cn/#/en-US/component/date-picker#date-formats) | yyyy-MM-dd |
@@ -29,7 +29,8 @@ This is a week range selector.
 | clear-icon | Custom clear icon class | string | — | el-icon-circle-close |
 | validate-event | whether to trigger form validation | boolean | - | true |
 
-### Picker Options
+## Picker Options
+
 | Attribute      | Description          | Type      | Accepted Values       | Default  |
 |---------- |-------------- |---------- |--------------------------------  |-------- |
 | shortcuts | a { text, onClick } object array to set shortcut options, check the table below | object[] | — | — |
@@ -38,26 +39,29 @@ This is a week range selector.
 | firstDayOfWeek | first day of week | Number | 1 to 7 | 7 |
 | onPick | a callback that triggers when the selected date is changed. Only for `daterange` and `datetimerange`. | Function({ maxDate, minDate }) | - | - |
 
-### shortcuts
+## shortcuts
+
 | Attribute      | Description          | Type      | Accepted Values       | Default  |
 |---------- |-------------- |---------- |--------------------------------  |-------- |
 | text | title of the shortcut | string | — | — |
 | onClick | callback function, triggers when the shortcut is clicked, with the `vm` as its parameter. You can change the picker value by emitting the `pick` event. Example: `vm.$emit('pick', new Date())`| function | — | — |
 
+## Events
 
-### Events
 | Event Name | Description | Parameters |
 |---------|--------|---------|
 | change | triggers when user confirms the value | component's binding value |
 | blur | triggers when Input blurs | component instance |
 | focus | triggers when Input focuses | component instance |
 
-### Methods
+## Methods
+
 | Method | Description | Parameters |
 |------|--------|-------|
 | focus | focus the Input component | — |
 
-### Slots
+## Slots
+
 | Name    | Description |
 |---------|-------------|
 | range-separator  | custom range separator content |
