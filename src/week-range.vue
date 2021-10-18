@@ -43,7 +43,7 @@
                 class="el-picker-panel__icon-btn el-icon-arrow-right"></button>
               <div>{{ leftLabel }}</div>
             </div>
-            <date-table
+            <week-table
               selection-mode="weekrange"
               :date="leftDate"
               :default-value="defaultValue"
@@ -55,7 +55,7 @@
               @changerange="handleChangeRange"
               :first-day-of-week="firstDayOfWeek"
               @pick="handleRangePick">
-            </date-table>
+            </week-table>
           </div>
           <div class="el-picker-panel__content el-date-range-picker__content is-right">
             <div class="el-date-range-picker__header">
@@ -83,7 +83,7 @@
                 class="el-picker-panel__icon-btn el-icon-arrow-right"></button>
               <div>{{ rightLabel }}</div>
             </div>
-            <date-table
+            <week-table
               selection-mode="weekrange"
               :date="rightDate"
               :default-value="defaultValue"
@@ -95,7 +95,7 @@
               @changerange="handleChangeRange"
               :first-day-of-week="firstDayOfWeek"
               @pick="handleRangePick">
-            </date-table>
+            </week-table>
           </div>
         </div>
       </div>
@@ -108,19 +108,16 @@
     formatDate,
     parseDate,
     isDate,
-    modifyDate,
     modifyWithTimeString,
     prevYear,
     nextYear,
     prevMonth,
     nextMonth,
     nextDate,
-    extractDateFormat,
-    extractTimeFormat
   } from 'element-ui/src/utils/date-util';
   import Clickoutside from 'element-ui/src/utils/clickoutside';
   import Locale from 'element-ui/src/mixins/locale';
-  import DateTable from '../basic/date-table';
+  import WeekTable from './week-table';
 
   const calcDefaultValue = (defaultValue) => {
     if (Array.isArray(defaultValue)) {
@@ -138,10 +135,6 @@
     directives: { Clickoutside },
 
     computed: {
-      btnDisabled() {
-        return !(this.minDate && this.maxDate && !this.selecting && this.isValidValue([this.minDate, this.maxDate]));
-      },
-
       leftLabel() {
         return this.leftDate.getFullYear() + ' ' + this.t('el.datepicker.year') + ' ' + this.t(`el.datepicker.month${ this.leftDate.getMonth() + 1 }`);
       },
@@ -158,60 +151,12 @@
         return this.leftDate.getMonth();
       },
 
-      leftMonthDate() {
-        return this.leftDate.getDate();
-      },
-
       rightYear() {
         return this.rightDate.getFullYear();
       },
 
       rightMonth() {
         return this.rightDate.getMonth();
-      },
-
-      rightMonthDate() {
-        return this.rightDate.getDate();
-      },
-
-      minVisibleDate() {
-        if (this.dateUserInput.min !== null) return this.dateUserInput.min;
-        if (this.minDate) return formatDate(this.minDate, this.dateFormat);
-        return '';
-      },
-
-      maxVisibleDate() {
-        if (this.dateUserInput.max !== null) return this.dateUserInput.max;
-        if (this.maxDate || this.minDate) return formatDate(this.maxDate || this.minDate, this.dateFormat);
-        return '';
-      },
-
-      minVisibleTime() {
-        if (this.timeUserInput.min !== null) return this.timeUserInput.min;
-        if (this.minDate) return formatDate(this.minDate, this.timeFormat);
-        return '';
-      },
-
-      maxVisibleTime() {
-        if (this.timeUserInput.max !== null) return this.timeUserInput.max;
-        if (this.maxDate || this.minDate) return formatDate(this.maxDate || this.minDate, this.timeFormat);
-        return '';
-      },
-
-      timeFormat() {
-        if (this.format) {
-          return extractTimeFormat(this.format);
-        } else {
-          return 'HH:mm:ss';
-        }
-      },
-
-      dateFormat() {
-        if (this.format) {
-          return extractDateFormat(this.format);
-        } else {
-          return 'yyyy-MM-dd';
-        }
       },
 
       enableMonthArrow() {
@@ -312,6 +257,8 @@
             this.maxDate = new Date(this.maxDate.getTime() + nextWeekDay * 60 * 60 * 24 * 1000);
           }
 
+          this.handleMinMaxDateWeek();
+
           if (this.minDate) {
             this.leftDate = this.minDate;
             if (this.unlinkPanels && this.maxDate) {
@@ -344,61 +291,27 @@
     },
 
     methods: {
-      handleClear() {
-        this.minDate = null;
-        this.maxDate = null;
-        this.leftDate = calcDefaultValue(this.defaultValue)[0];
-        this.rightDate = nextMonth(this.leftDate);
-        this.$emit('pick', null);
+      handleMinMaxDateWeek() {
+        if(this.minDate && this.maxDate) {
+          if(this.minDate.getTime() > this.maxDate.getTime()) {
+            const maxDate = this.minDate;
+
+            this.minDate = this.maxDate;
+            this.maxDate = maxDate;
+          }
+
+          const prevWeekDay = Math.abs(7 - this.firstDayOfWeek + this.minDate.getDay()) % 7;
+          this.minDate = new Date(this.minDate.getTime() - prevWeekDay * 60 * 60 * 24 * 1000);
+        
+          const nextWeekDay = Math.abs(this.firstDayOfWeek - 1 - this.maxDate.getDay()) % 7;
+          this.maxDate = new Date(this.maxDate.getTime() + nextWeekDay * 60 * 60 * 24 * 1000);
+        }
       },
 
       handleChangeRange(val) {
         this.minDate = val.minDate;
         this.maxDate = val.maxDate;
         this.rangeState = val.rangeState;
-      },
-
-      handleDateInput(value, type) {
-        this.dateUserInput[type] = value;
-        if (value.length !== this.dateFormat.length) return;
-        const parsedValue = parseDate(value, this.dateFormat);
-
-        if (parsedValue) {
-          if (typeof this.disabledDate === 'function' &&
-            this.disabledDate(new Date(parsedValue))) {
-            return;
-          }
-          if (type === 'min') {
-            this.minDate = modifyDate(this.minDate || new Date(), parsedValue.getFullYear(), parsedValue.getMonth(), parsedValue.getDate());
-            this.leftDate = new Date(parsedValue);
-            if (!this.unlinkPanels) {
-              this.rightDate = nextMonth(this.leftDate);
-            }
-          } else {
-            this.maxDate = modifyDate(this.maxDate || new Date(), parsedValue.getFullYear(), parsedValue.getMonth(), parsedValue.getDate());
-            this.rightDate = new Date(parsedValue);
-            if (!this.unlinkPanels) {
-              this.leftDate = prevMonth(parsedValue);
-            }
-          }
-        }
-      },
-
-      handleDateChange(value, type) {
-        const parsedValue = parseDate(value, this.dateFormat);
-        if (parsedValue) {
-          if (type === 'min') {
-            this.minDate = modifyDate(this.minDate, parsedValue.getFullYear(), parsedValue.getMonth(), parsedValue.getDate());
-            if (this.minDate > this.maxDate) {
-              this.maxDate = this.minDate;
-            }
-          } else {
-            this.maxDate = modifyDate(this.maxDate, parsedValue.getFullYear(), parsedValue.getMonth(), parsedValue.getDate());
-            if (this.maxDate < this.minDate) {
-              this.minDate = this.maxDate;
-            }
-          }
-        }
       },
 
       handleRangePick(val, close = true) {
@@ -501,9 +414,11 @@
         if (this.minDate && this.maxDate == null) this.rangeState.selecting = false;
         this.minDate = this.value && isDate(this.value[0]) ? new Date(this.value[0]) : null;
         this.maxDate = this.value && isDate(this.value[0]) ? new Date(this.value[1]) : null;
+
+        this.handleMinMaxDateWeek();
       }
     },
 
-    components: { DateTable }
+    components: { WeekTable }
   };
 </script>

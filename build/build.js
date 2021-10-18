@@ -103,6 +103,11 @@ const runBuild = async () => {
         })
       ],
       external(id) {
+        // 必须编译
+        if(id.includes('vue-runtime-helpers')) {
+          return false;
+        }
+
         return name === "umd"
           ? /^vue$/.test(id)
           : deps.some(k => {
