@@ -1,4 +1,4 @@
-import { ElementUIComponent, ElementUIComponentSize, ElementUIHorizontalAlignment } from 'element-ui/types/component'
+import { ElementUIComponent, ElementUIComponentSize, ElementUIHorizontalAlignment } from './component'
 
 export type FirstDayOfWeek = 1 | 2 | 3 | 4 | 5 | 6 | 7
 
