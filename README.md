@@ -57,13 +57,19 @@ yarn add date-week-range@next --save
 import DateWeekRange from 'date-week-range'
 import { createApp } from 'vue'
 
-// 引入样式；如果全局引入了 element-plus 样式，则不需额外引入
-// 全局引入 element-plus 样式
-import 'element-plus/lib/theme-chalk/index.css'
+// 引入样式；如果全局引入了 element-plus 样式，则无需再次引入
 
-// 或者额外引入
-// import 'element-plus/lib/theme-chalk/el-icon.css'
-// import 'element-plus/lib/theme-chalk/el-date-picker.css'
+
+// 全局引入 element-plus 样式
+// import 'element-plus/dist/index.css'
+
+// 或引入
+// import 'element-plus/theme-chalk/el-icon.css'
+// import 'element-plus/theme-chalk/el-date-picker.css'
+// import 'element-plus/theme-chalk/el-var.css';
+
+// 或引入
+// import 'date-week-range/index.css'
 
 const app = createApp({
   /* ... */

@@ -1,5 +1,3 @@
-const path = require("path");
-
 module.exports = {
   pages: {
     index: {
@@ -8,12 +6,5 @@ module.exports = {
       filename: "index.html"
     }
   },
-  transpileDependencies: ["element-plus", "@element-plus"],
-  configureWebpack: {
-    resolve: {
-      alias: {
-        "@element-plus": path.resolve(__dirname, "node_modules", "element-plus", "packages")
-      }
-    }
-  }
+  transpileDependencies: ["element-plus", "@element-plus"]
 };

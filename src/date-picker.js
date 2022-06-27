@@ -1,5 +1,5 @@
-import { defineComponent, ref, h } from 'vue'
-import { CommonPicker, defaultProps } from 'element-plus/lib/el-time-picker'
+import { defineComponent, ref } from 'vue'
+import { CommonPicker, timePickerDefaultProps } from 'element-plus/es/components/time-picker/index'
 import WeekRangePickPanel from './date-picker-com/panel-week-range.vue'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
@@ -23,7 +23,7 @@ export default defineComponent({
   name: 'DateWeekRange',
   install: null,
   props: {
-    ...defaultProps
+    ...timePickerDefaultProps
   },
   emits: ['update:modelValue'],
   setup(props, ctx) {
@@ -35,15 +35,19 @@ export default defineComponent({
       },
     }
     ctx.expose(refProps)
-    return () => h(CommonPicker, {
-      format: 'YYYY年ww周',
-      ...props, // allow format to be overwrite
-      type: 'daterange',
-      ref: commonPicker,
-      'onUpdate:modelValue': value => ctx.emit('update:modelValue', value),
-    },
-    {
-      default: scopedProps => h(WeekRangePickPanel, scopedProps),
-    })
+
+    return () => {
+      return <CommonPicker
+        {...props}
+        ref={commonPicker}
+        type={'date-range'}
+        format={'YYYY年ww周'}
+        onUpdate:modelValue={value => ctx.emit('update:modelValue', value)}
+      >
+        {{
+          default: (props) => <WeekRangePickPanel {...props} />,
+        }}
+      </CommonPicker>
+    }
   },
 })

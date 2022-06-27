@@ -5,13 +5,6 @@
     :disabled-date="disabledDate"
     range-separator=";"
   ></date-week-range>
-  <el-date-picker
-    v-model="test"
-    type="daterange"
-    range-separator="666"
-    start-placeholder="开始日期"
-    end-placeholder="结束日期">
-  </el-date-picker>
   </div>
 </template>
 
