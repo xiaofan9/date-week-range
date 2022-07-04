@@ -24,8 +24,8 @@
           :key="key_"
           :class="getCellClasses(cell)"
         >
-          <div>
-            <span>
+          <div class="el-date-table-cell">
+            <span class="el-date-table-cell__text">
               {{ cell.text }}
             </span>
           </div>
@@ -36,10 +36,7 @@
 </template>
 
 <script>
-import { t } from 'element-plus/lib/locale'
-import {
-  coerceTruthyValueToArray,
-} from 'element-plus/lib/utils/util'
+import { useLocale } from 'element-plus/lib/hooks/index'
 import { handleDate } from '../util';
 
 import {
@@ -93,6 +90,7 @@ export default defineComponent({
     const lastRow = ref(null)
     const lastColumn = ref(null)
     const tableRows = ref([ [], [], [], [], [], [] ])
+    const { t } = useLocale();
 
     // todo better way to get Day.js locale object
     const firstDayOfWeek = props.date.$locale().weekStart || 7
@@ -147,8 +145,6 @@ export default defineComponent({
       const offset = offsetDay.value
       const rows_ = tableRows.value
       let count = 1
-
-      const selectedDate = props.selectionMode === 'dates' ? coerceTruthyValueToArray(props.parsedValue) : []
 
       const calNow = dayjs().startOf('day')
 
@@ -228,11 +224,12 @@ export default defineComponent({
           }
 
           const cellDate = calTime.toDate()
-          cell.selected = selectedDate.find(_ => _.valueOf() === calTime.valueOf())
+          cell.selected = false
           cell.disabled = props.disabledDate && props.disabledDate(cellDate)
 
           if(cell.disabled) {
             if(!disabledWeek.value) {
+              // eslint-disable-next-line vue/no-side-effects-in-computed-properties
               disabledWeek.value = calTime.week();
             }
 

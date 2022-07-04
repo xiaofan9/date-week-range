@@ -18,7 +18,7 @@ const input = path.resolve(foldPath, "src/index.js");
 const outputConfig = {
   esm: {
     format: "esm",
-    file: path.resolve(foldPath, `dist/${pkg.name}.esm.js`)
+    file: path.resolve(foldPath, `dist/index.esm.js`)
   },
   // umd: {
   //   format: "umd",
