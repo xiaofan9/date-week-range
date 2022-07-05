@@ -1,14 +1,22 @@
+export const handleWeekLastDay = date => {
+  const firstDayOfWeek = date.$locale().weekStart || 7;
+  const day = date.day() || 7;
+  const weekStartDay = firstDayOfWeek === day ? 6 : Math.abs(firstDayOfWeek - day - 1);
 
-export const handleDate = (date, isAdd) => {
-  const firstDayOfWeek = date.$locale().weekStart || 7
-  let newDate = date;
-  const weekSatrtDay = ((newDate.day() === 0 ? 7 : newDate.day()) - firstDayOfWeek);
+  console.log('LastDay', weekStartDay, date.format('YYYY-MM-DD'))
 
-  if(weekSatrtDay !== 0 && !isAdd) {
-    newDate = newDate.add(weekSatrtDay * -1, 'day')
-  } else if(6 - weekSatrtDay !== 0 && isAdd) {
-    newDate = newDate.add(6 - weekSatrtDay, 'day')
-  }
+  const newDate = date.add(weekStartDay, "day");
 
   return newDate;
-}
+};
+
+export const handleWeekOneDay = date => {
+  const firstDayOfWeek = date.$locale().weekStart || 7;
+  const day = date.day() || 7;
+  const weekStartDay = firstDayOfWeek === day ? 0 : Math.abs(7 - firstDayOfWeek - day);
+
+  console.log('OneDayOneDay',weekStartDay,  date.format('YYYY-MM-DD'))
+  const newDate = date.subtract(weekStartDay, "day");
+
+  return newDate;
+};

@@ -2,7 +2,6 @@
   <div>
     <date-week-range
     v-model="test"
-    :disabled-date="disabledDate"
     range-separator=";"
   ></date-week-range>
   </div>
@@ -19,9 +18,9 @@ export default {
   setup() {
     return {
       test: ref(['2021-04-12', '2021-04-16']),
-      disabledDate(time) {
-        return time.getTime() > Date.now()
-      },
+      // disabledDate(time) {
+      //   return time.getTime() > Date.now()
+      // },
     }
   },
   // components: {

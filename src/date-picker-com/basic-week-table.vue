@@ -3,7 +3,6 @@
     cellspacing="0"
     cellpadding="0"
     class="el-date-table"
-    :class="{ 'is-week-mode': selectionMode === 'week' }"
     @click="handleClick"
     @mousemove="handleMouseMove"
     @mouseleave="handleMouseOut"
@@ -37,7 +36,7 @@
 
 <script>
 import { useLocale } from 'element-plus/lib/hooks/index'
-import { handleDate } from '../util';
+import { handleWeekLastDay, handleWeekOneDay } from '../util';
 
 import {
   defineComponent,
@@ -59,10 +58,6 @@ export default defineComponent({
     },
     parsedValue: {
       type: [Object, Array]
-    },
-    selectionMode: {
-      type: String,
-      default: 'day',
     },
     showWeekNumber: {
       type: Boolean,
@@ -111,7 +106,6 @@ export default defineComponent({
     })
 
     const isWeekActive = cell => {
-      if (props.selectionMode !== 'week') return false
       let newDate = props.date.startOf('day')
 
       if (cell.type === 'prev-month') {
@@ -191,6 +185,7 @@ export default defineComponent({
             calTime.isSameOrAfter(calEndDate, 'day')
           ) || moveDate.value && calTime.isSameOrAfter(moveDate.value, 'week') && calTime.isSameOrBefore(moveDate.value, 'week')
 
+          // 最开始选中的日期是否在移动中的日期之前
           if (props.minDate?.isSameOrAfter(calEndDate)) {
             cell.start = calEndDate && calTime.isSame(calEndDate, 'day')
             cell.end = props.minDate && calTime.isSame(props.minDate, 'day')
@@ -240,16 +235,6 @@ export default defineComponent({
           cell.customClass = props.cellClassName && props.cellClassName(cellDate)
           row[props.showWeekNumber ? j + 1 : j] = cell
         }
-
-        if (props.selectionMode === 'week') {
-          const start = props.showWeekNumber ? 1 : 0
-          const end = props.showWeekNumber ? 7 : 6
-          const isActive = isWeekActive(row[start + 1])
-          row[start].inRange = isActive
-          row[start].start = isActive
-          row[end].inRange = isActive
-          row[end].end = isActive
-        }
       }
 
       return rows_
@@ -275,11 +260,11 @@ export default defineComponent({
         classes.push(cell.type)
       }
 
-      if (props.selectionMode === 'day' && (cell.type === 'normal' || cell.type === 'today') && cellMatchesDate(cell, props.parsedValue)) {
+      if ((cell.type === 'normal' || cell.type === 'today') && cellMatchesDate(cell, props.parsedValue)) {
         classes.push('current')
       }
 
-      if (cell.inRange && ((cell.type === 'normal' || cell.type === 'today') || props.selectionMode === 'week')) {
+      if (cell.inRange && ((cell.type === 'normal' || cell.type === 'today'))) {
         classes.push('in-range')
 
         if (cell.start) {
@@ -340,16 +325,36 @@ export default defineComponent({
         lastRow.value = row
         lastColumn.value = column
 
-        let endDate = handleDate(getDateOfCell(row, column), true);
+        let endDate = getDateOfCell(row, column);
+        let minDate = props.minDate;
 
-        if(endDate.unix() < props.minDate.add(1, 'week').unix()) {
-          endDate = handleDate(getDateOfCell(row, column), false);
+        const minDay = minDate.day() || 7;
+        const endDay = endDate.day() || 7;
 
-          ctx.emit('pick', { minDate: handleDate(props.minDate, true), maxDate: null })
+        if(!endDate.isSameOrAfter(props.minDate)) {
+          console.log(1, endDate.format('YYYY-MM-DD'));
+          if(endDay < firstDayOfWeek) {
+            // endDate = endDate.subtract(1, 'week')
+          }
+
+          if(minDay === firstDayOfWeek) {
+            minDate = handleWeekLastDay(minDate);
+          }
+
+          endDate = handleWeekOneDay(endDate, false);
         } else {
-          ctx.emit('pick', { minDate: handleDate(props.minDate, false), maxDate: null })
+          if(minDate.day() === firstDayOfWeek - 1) {
+            minDate = handleWeekOneDay(minDate);
+          }
+
+          if(endDay < firstDayOfWeek) {
+            // endDate = endDate.subtract(1, 'week')
+          }
+
+          endDate = handleWeekLastDay(endDate);
         }
 
+        ctx.emit('pick', { minDate, maxDate: null })
         ctx.emit('changerange', {
           selecting: true,
           endDate,
@@ -378,22 +383,22 @@ export default defineComponent({
 
       if (cell.disabled || cell.type === 'week') return
 
-      const newDate = handleDate(getDateOfCell(row, column), props.rangeState.selecting)
+      const tmpNewDate = getDateOfCell(row, column);
 
-      if (props.selectionMode === 'range') {
-        moveDate.value = null;
-        if (!props.rangeState.selecting) {
-          ctx.emit('pick', { minDate: newDate, maxDate: handleDate(getDateOfCell(row, column), true) }, false)
-          ctx.emit('select', true)
+      const newDate = handleWeekOneDay(tmpNewDate)
+
+      moveDate.value = null;
+      if (!props.rangeState.selecting) {
+        ctx.emit('pick', { minDate: newDate, maxDate: handleWeekLastDay(tmpNewDate) }, false)
+        ctx.emit('select', true)
+      } else {
+        if (tmpNewDate >= props.minDate) {
+          ctx.emit('pick', { minDate: handleWeekOneDay(props.minDate), maxDate: handleWeekLastDay(tmpNewDate) })
         } else {
-          if (newDate >= props.minDate) {
-            ctx.emit('pick', { minDate: props.minDate, maxDate: newDate })
-          } else {
-            ctx.emit('pick', { minDate: newDate, maxDate: props.minDate })
-          }
-          ctx.emit('select', false)
+          ctx.emit('pick', { minDate: handleWeekOneDay(tmpNewDate), maxDate:  handleWeekOneDay(props.minDate) })
         }
-      } 
+        ctx.emit('select', false)
+      }
     }
 
     return {
