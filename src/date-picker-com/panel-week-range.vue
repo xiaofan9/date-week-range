@@ -69,7 +69,7 @@
             </template>
             <div>{{ leftLabel }}</div>
           </div>
-          <date-table
+          <date-week-table
             selection-mode="range"
             :date="leftDate"
             :min-date="minDate"
@@ -128,7 +128,7 @@
             </button>
             <div>{{ rightLabel }}</div>
           </div>
-          <date-table
+          <date-week-table
             selection-mode="range"
             :date="rightDate"
             :min-date="minDate"
@@ -157,8 +157,8 @@ import {
 import { useLocale } from 'element-plus/lib/hooks/index'
 import { ClickOutside } from 'element-plus/lib/directives/index'
 import dayjs from 'dayjs'
-import DateTable from './basic-date-table.vue'
-import { handleDate } from '../util';
+import DateWeekTable from './basic-week-table.vue'
+import { handleWeekLastDay, handleWeekOneDay } from '../util';
 import { ElIcon } from 'element-plus'
 import { ArrowLeft, ArrowRight, DArrowLeft, DArrowRight } from '@element-plus/icons-vue'
 
@@ -166,16 +166,12 @@ export default defineComponent({
 
   directives: { clickoutside: ClickOutside },
 
-  components: { DateTable, ElIcon, ArrowLeft, ArrowRight, DArrowLeft, DArrowRight },
+  components: { DateWeekTable, ElIcon, ArrowLeft, ArrowRight, DArrowLeft, DArrowRight },
 
   props:{
     unlinkPanels: Boolean,
     parsedValue: {
       type: Array,
-    },
-    type: {
-      type: String,
-      required: true,
     },
   },
 
@@ -377,8 +373,8 @@ export default defineComponent({
 
     watch(() => props.parsedValue, newVal => {
       if (newVal && newVal.length === 2) {
-        minDate.value = handleDate(newVal[0], false)
-        maxDate.value = handleDate(newVal[1], true)
+        minDate.value = handleWeekOneDay(newVal[0])
+        maxDate.value = handleWeekLastDay(newVal[1])
 
         leftDate.value = minDate.value
         if (props.unlinkPanels && maxDate.value) {
