@@ -15,7 +15,7 @@ This is a week range selector.
 | placeholder | placeholder in non-range mode | string | — | — |
 | start-placeholder | placeholder for the start date in range mode | string | — | — |
 | end-placeholder | placeholder for the end date in range mode | string | — | — |
-| format | format of the displayed value in the input box | string | see [date formats](https://element-plus.org/#/en-US/component/date-picker#date-formats) | YYYY-MM-DD |
+| format | format of the displayed value in the input box | string | see [date formats](https://element-plus.org/en-US/component/date-picker.html#date-formats) | YYYY-MM-DD |
 | align | alignment | — | left/center/right | left |
 | popper-class | custom class name for DatePicker's dropdown | string | — | — |
 | range-separator | range separator | string | — | '-' |

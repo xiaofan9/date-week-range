@@ -4,7 +4,7 @@ const { Reflect } = require('core-js');
 const merge = require('merge');
 const sass = require('gulp-sass')(require('sass'));
 const sassGlob = require('gulp-sass-glob');
-const cssnano = require('gulp-cssnano');
+const cleanCSS = require('gulp-clean-css');
 
 const packageFoldPath = './';
 const cssFoldPath = './dist';
@@ -27,7 +27,7 @@ function package() {
 
 function css() {
   return src("./src/style/index.scss").pipe(sassGlob())
-  .pipe(sass()).pipe(cssnano()).pipe(dest(cssFoldPath));
+  .pipe(sass()).pipe(cleanCSS()).pipe(dest(cssFoldPath));
 }
 
 exports.default = series(css, package)

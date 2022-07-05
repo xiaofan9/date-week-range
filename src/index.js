@@ -13,9 +13,9 @@ function install(app, options = {
   }
 }
 
-DatePicker.install = install
-DatePicker.version = pkg.version
-
 export const DateWeekRange = DatePicker;
 
-export default DatePicker
+export default {
+  install,
+  version: pkg.version
+}

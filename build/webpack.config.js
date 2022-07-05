@@ -31,6 +31,7 @@ const output = {
   filename: "index.min.js",
   libraryTarget: "umd",
   library: "DateWeekRange",
+  libraryExport: 'default',
   umdNamedDefine: true,
   globalObject: "typeof self !== 'undefined' ? self : this"
 };

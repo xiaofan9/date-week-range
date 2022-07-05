@@ -21,7 +21,6 @@ dayjs.extend(isSameOrBefore)
 
 export default defineComponent({
   name: 'DateWeekRange',
-  install: null,
   props: {
     ...timePickerDefaultProps
   },
@@ -40,7 +39,7 @@ export default defineComponent({
       return <CommonPicker
         {...props}
         ref={commonPicker}
-        type={'date-range'}
+        type={'daterange'}
         format={'YYYY年ww周'}
         onUpdate:modelValue={value => ctx.emit('update:modelValue', value)}
       >
